@@ -17,7 +17,7 @@ class Player(Sprite):
         self.x = start_x
         self.y = start_y
         self.screen = screen
-        self.rect = pygame.Rect(self.x, self.y, 300, 300)
+        self.rect = pygame.Rect(self.x, self.y, 150, 150)
 		
 
     def update_me(self,player_pos):
@@ -40,9 +40,9 @@ class Player(Sprite):
 	# 2. The methods where you define all the class functions (methods)
     def draw_me(self):
         copied_image_bottom = self.image_bottom.copy()
-        pygame.transform.rotate(copied_image_bottom, self.bottom_angle)
-        self.screen.blit(self.image_bottom, [self.x,self.y])
-        # self.screen.blit(self.image_top, [self.x,self.y])
+        rot_image_bottom = pygame.transform.rotate(copied_image_bottom, self.bottom_angle)
+        self.screen.blit(rot_image_bottom, [self.x, self.y])
+        self.screen.blit(self.image_top, [self.x,self.y])
 
 		
 

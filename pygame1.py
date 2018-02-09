@@ -44,7 +44,7 @@ def main():
 
             if event.type == pygame.QUIT:
                 stop_game = True    
-            the_player.image_bottom = rot_center(the_player.image_bottom, 3)
+            the_player.bottom_angle += 3
            
         # Game logic
         
