@@ -91,7 +91,6 @@ class Player(Sprite):
             add_y = math.sin(radians) * self.speed
             self.x += add_x
             self.y += add_y
-            print math.cos(radians)
         
     
     def move_down(self):
@@ -124,6 +123,10 @@ class Player(Sprite):
             add_y = math.sin(radians) * speed
             self.x -= add_x
             self.y -= add_y
+
+        # def update(self):
+        #     self.x += self.speed_x
+        #     self.y += self.speed_y
   
 
 		
