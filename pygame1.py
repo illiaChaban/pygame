@@ -3,16 +3,10 @@ from player_tank import Player
 import math 
 # from pygame.sprite import Group, groupcollide
 
-def rot_center(image, angle):
-    # """rotate an image while keeping its center and size"""
-    orig_rect = image.get_rect()
-    copy_img = image.copy()
-    rot_image = pygame.transform.rotate(copy_img, angle)
-    rot_rect = orig_rect.copy()
-    rot_rect.center = rot_image.get_rect().center
-    rot_image = rot_image.subsurface(rot_rect).copy()
-    return rot_image
-
+KEY_UP = 273
+KEY_DOWN = 274
+KEY_LEFT = 276
+KEY_RIGHT = 275
 
 
 
@@ -43,8 +37,24 @@ def main():
             # Event handling
 
             if event.type == pygame.QUIT:
-                stop_game = True    
-            the_player.bottom_angle += 3
+                stop_game = True
+            elif event.type == pygame.KEYDOWN:
+                if event.key == KEY_UP:
+
+                    the_player.move_up()
+                if event.key == KEY_DOWN:
+                    the_player.move_down()
+
+                if event.key == KEY_LEFT:
+                    the_player.turn_left()
+                if event.key == KEY_RIGHT:
+                    the_player.turn_right()
+            print the_player.bottom_angle
+            print the_player.x
+            print the_player.y        
+            # if event.type == pygame.KEYUP:
+                        
+            #     the_player.bottom_angle += 3
            
         # Game logic
         
@@ -52,7 +62,7 @@ def main():
         # Draw background
         screen.fill(blue_color)
         screen.blit(background, [0,0])
-        pygame.draw.circle(screen, (255, 0, 0), (0, 0), 50, 0)
+        pygame.draw.circle(screen, (255, 0, 0), (500, 250), 50, 0)
         the_player.draw_me()
         
 
