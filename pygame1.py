@@ -23,7 +23,7 @@ def main():
     background = pygame.transform.scale(background, (width,height))
     the_player = Player("images/tank-bottom-white.png", "images/tank-top-white.png", 350, 350, screen)
     
-
+    #
     #what does this do???? 
     # player_group = Group()
     # player_group.add(the_player)

@@ -44,7 +44,7 @@ class Player(Sprite):
             self.y = player_pos[1]
         self.rect = pygame.Rect(self.x, self.y, 150, 150)
 
-		
+	#	
 	# 2. The methods where you define all the class functions (methods)
     def draw_me(self):
         #when the bottom rotates it changes its center, that's why we have to update the center while we rotate
@@ -67,7 +67,7 @@ class Player(Sprite):
         #optimize
         x2 = pygame.mouse.get_pos()[0]
         y2 = pygame.mouse.get_pos()[1]
-        centered_x = self.image_top.get_rect().center[0]
+        centered_x = self.image_top.get_rect().center[0] 
         centered_y = self.image_top.get_rect().center[1]
 
         #finding angle between mouse and tank
