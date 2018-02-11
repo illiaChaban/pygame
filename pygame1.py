@@ -22,6 +22,7 @@ def main():
     background = pygame.image.load('images/grass.jpg')
     background = pygame.transform.scale(background, (width,height))
     the_player = Player("images/tank-bottom-white.png", "images/tank-top-white.png", 350, 350, screen)
+    
 
     #what does this do???? 
     # player_group = Group()
@@ -42,6 +43,7 @@ def main():
                 if event.key == KEY_UP:
 
                     the_player.move_up()
+                    
                 if event.key == KEY_DOWN:
                     the_player.move_down()
 
@@ -49,18 +51,32 @@ def main():
                     the_player.turn_left()
                 if event.key == KEY_RIGHT:
                     the_player.turn_right()
-            print the_player.bottom_angle
-            print the_player.x
-            print the_player.y        
+
+            elif event.type == pygame.KEYUP:
+                if event.key == KEY_UP:
+                    the_player.stop()
+                if event.key == KEY_DOWN:
+                    the_player.stop()
+                if event.key == KEY_RIGHT:
+                    the_player.stop_turn()
+                if event.key == KEY_LEFT:
+                    the_player.stop_turn()        
+
+            elif event.type == pygame.MOUSEMOTION:
+                pass
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pass         
             # if event.type == pygame.KEYUP:
                         
             #     the_player.bottom_angle += 3
            
         # Game logic
+        the_player.update()
         
 
         # Draw background
-        screen.fill(blue_color)
+   
         screen.blit(background, [0,0])
         pygame.draw.circle(screen, (255, 0, 0), (500, 250), 50, 0)
         the_player.draw_me()
