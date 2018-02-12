@@ -9,15 +9,15 @@ class Player(Sprite):
         super(Player,self).__init__()
         #why do we need super??
         self.image_bottom = pygame.image.load(image_bottom)
-        self.image_bottom = pygame.transform.scale(self.image_bottom,(150,150))
+        self.image_bottom = pygame.transform.scale(self.image_bottom,(74,38))
         self.image_top = pygame.image.load(image_top)
-        self.image_top = pygame.transform.scale(self.image_top,(150, 150))
+        self.image_top = pygame.transform.scale(self.image_top,(72, 28))
         
         self.bottom_angle = 0 
         self.top_angle = 0
 
         
-        self.speed = 10
+        self.speed = 6
         self.speed_x = 0
         self.speed_y = 0
         self.turn_speed = 0
@@ -25,7 +25,9 @@ class Player(Sprite):
         self.x = start_x
         self.y = start_y
         self.screen = screen
-        self.rect = pygame.Rect(self.x, self.y, 150, 150)
+        self.rect = pygame.Rect(self.x, self.y, 70, 70)
+        self.shell1 = pygame.image.load("images/tank_shell1_cropped.png")
+        self.shell1 = pygame.transform.scale(self.shell1, (20,20))
 		
 
     def update_me(self,player_pos): ## wtf i'm doing here????
@@ -60,7 +62,7 @@ class Player(Sprite):
         #it should change its position too
        
         
-    
+        #changes the relative center of image_top
         radians_top = self.top_angle * math.pi / 180
         change_x = math.cos(radians_top) * (-15)   #8 pixels - how far back i want to put the tank top
         change_y = math.sin(radians_top) * (-15)
@@ -101,8 +103,8 @@ class Player(Sprite):
         radians = self.bottom_angle * math.pi / 180
         add_x = math.cos(radians) * self.speed
         add_y = math.sin(radians) * self.speed
-        self.speed_x += add_x
-        self.speed_y -= add_y
+        self.speed_x = add_x
+        self.speed_y = - add_y
             
         
     
@@ -111,8 +113,8 @@ class Player(Sprite):
         radians = self.bottom_angle * math.pi / 180
         add_x = math.cos(radians) * speed
         add_y = math.sin(radians) * speed
-        self.speed_x -= add_x
-        self.speed_y += add_y
+        self.speed_x = - add_x
+        self.speed_y = add_y
 
     def stop(self):
         self.speed_x = 0
@@ -125,6 +127,18 @@ class Player(Sprite):
         self.x += self.speed_x
         self.y += self.speed_y
         self.bottom_angle += self.turn_speed
+
+    def shoot(self):
+        shell_speed = 40
+        #check top_angle
+        start_x = self.x
+        start_y = self.y
+        end_x = pygame.mouse.get_pos()[0]
+        end_y = pygame.mouse.get_pos()[1]
+        print start_x
+        self.top_angle 
+
+    
 
    
 
