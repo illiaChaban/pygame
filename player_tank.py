@@ -17,9 +17,7 @@ class Player(Sprite):
         self.top_angle = 0
 
         
-        self.speed = 6
-        self.speed_x = 0
-        self.speed_y = 0
+        self.speed = 0
         self.turn_speed = 0
 
         self.x = start_x
@@ -78,6 +76,7 @@ class Player(Sprite):
         rads = math.atan2(-dy, dx) % (2* math.pi)
         angle = math.degrees(rads)
         self.top_angle = angle
+        print angle
 
         # changing the center while rotating 
         copied_top = self.image_top.copy()
@@ -100,33 +99,28 @@ class Player(Sprite):
         
 
     def move_up(self):
-        radians = self.bottom_angle * math.pi / 180
-        add_x = math.cos(radians) * self.speed
-        add_y = math.sin(radians) * self.speed
-        self.speed_x = add_x
-        self.speed_y = - add_y
-            
-        
+        self.speed = 6
     
     def move_down(self):
-        speed = self.speed / 2
-        radians = self.bottom_angle * math.pi / 180
-        add_x = math.cos(radians) * speed
-        add_y = math.sin(radians) * speed
-        self.speed_x = - add_x
-        self.speed_y = add_y
+        self.speed = - 3
 
     def stop(self):
-        self.speed_x = 0
-        self.speed_y = 0
+        self.speed = 0
 
     def stop_turn(self):
         self.turn_speed = 0         
 
     def update(self):
-        self.x += self.speed_x
-        self.y += self.speed_y
+        
+        radians = self.bottom_angle * math.pi / 180
+        add_x = math.cos(radians) * self.speed
+        add_y = math.sin(radians) * self.speed
+        self.x += add_x
+        self.y -= add_y
+
         self.bottom_angle += self.turn_speed
+
+        
 
     def shoot(self):
         shell_speed = 40
