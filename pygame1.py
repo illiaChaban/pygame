@@ -2,7 +2,8 @@ import pygame
 from player_tank import Player
 import math 
 import time
-# from pygame.sprite import Group, groupcollide
+from pygame.sprite import Group, groupcollide # why do we need it????
+from Shell import Shell
 
 KEY_UP = 273
 KEY_DOWN = 274
@@ -10,6 +11,7 @@ KEY_LEFT = 276
 KEY_RIGHT = 275
 
 black = (0, 0, 0)
+
 
 # def gameStart():
 # 	myFont = pygame.font.SysFont("monaco", 72)
@@ -32,9 +34,15 @@ def main():
     clock = pygame.time.Clock()
     background = pygame.image.load('images/background_desert1.png')
     background = pygame.transform.scale(background, (width,height))
-    the_player = Player("images/tank_bottom_new_cropped1.png", "images/tank_top_new_cropped.png", 350, 350, screen)
-    
+    the_player = Player("images/tank_bottom_new_cropped2.png", "images/tank_top_new_cropped2.png", 350, 350, screen)
+    #do we even need this?
+    players = Group()
+    players.add(the_player)
     #
+    
+    shells = Group()
+    
+
     #what does this do???? 
     # player_group = Group()
     # player_group.add(the_player)
@@ -78,7 +86,10 @@ def main():
                 pass
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                the_player.shoot()
+                mouse_pos = pygame.mouse.get_pos()
+                new_shell = Shell("images/tank_shell2_cropped.png", screen, the_player, mouse_pos)
+                shells.add(new_shell)
+                # the_player.shoot()
                 # if event.key          
             # if event.type == pygame.KEYUP:
                         
@@ -91,9 +102,17 @@ def main():
         # Draw background
    
         screen.blit(background, [0,0])
-        pygame.draw.circle(screen, (255, 0, 0), (500, 250), 50, 0)
+        
         the_player.draw_me()
         
+
+        #shell display
+
+        for shell in shells:
+            shell.update(the_player)
+            shell.draw_shell()
+            if shell.beyond_screen():
+                shells.remove(shell)
 
         # Game display
 
