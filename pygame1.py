@@ -87,7 +87,7 @@ def main():
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                new_shell = Shell("images/tank_shell2_cropped.png", screen, the_player, mouse_pos)
+                new_shell = Shell("images/tank_shell1_cropped.png", screen, the_player, mouse_pos)
                 shells.add(new_shell)
                 # the_player.shoot()
                 # if event.key          
@@ -113,6 +113,7 @@ def main():
             shell.draw_shell()
             if shell.beyond_screen():
                 shells.remove(shell)
+                #or if shell reached mouse_pos
 
         # Game display
 

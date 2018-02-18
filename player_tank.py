@@ -27,8 +27,7 @@ class Player(Sprite):
         self.x_top = 0
         self.screen = screen
         self.rect = pygame.Rect(self.x, self.y, 70, 70)
-        self.shell1 = pygame.image.load("images/tank_shell1_cropped.png")
-        self.shell1 = pygame.transform.scale(self.shell1, (20,20))
+        
 		
 
     # def update_me(self,player_pos): ## wtf i'm doing here????
@@ -126,15 +125,15 @@ class Player(Sprite):
 
         
 
-    def shoot(self):
-        shell_speed = 40
-        #check top_angle
-        start_x = self.x
-        start_y = self.y
-        end_x = pygame.mouse.get_pos()[0]
-        end_y = pygame.mouse.get_pos()[1]
-        print start_x
-        self.top_angle 
+    # def shoot(self):
+    #     shell_speed = 40
+    #     #check top_angle
+    #     start_x = self.x
+    #     start_y = self.y
+    #     end_x = pygame.mouse.get_pos()[0]
+    #     end_y = pygame.mouse.get_pos()[1]
+    #     print start_x
+    #     self.top_angle 
 
     
 
