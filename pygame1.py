@@ -24,8 +24,10 @@ black = (0, 0, 0)
 # 	pygame.quit()
 
 def main():
-    width = 1200
-    height = 850
+    # width = 1200
+    # height = 850
+    width = 700
+    height = 600
     blue_color = (97, 159, 182)
 
     pygame.init()

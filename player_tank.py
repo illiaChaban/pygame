@@ -114,7 +114,7 @@ class Player(Sprite):
         self.turn_speed = 0         
 
     def update(self):
-        
+        # print self.x_top
         radians = self.bottom_angle * math.pi / 180
         add_x = math.cos(radians) * self.speed
         add_y = math.sin(radians) * self.speed
