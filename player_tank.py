@@ -54,9 +54,13 @@ class Player(Sprite):
         copied_image = pygame.transform.rotate(copied_image, self.bottom_angle)
         width = copied_image.get_rect()[2]
         height = copied_image.get_rect()[3]
+        # print copied_image.get_rect()
         change_coo_x = (width - self.rect[2]) / 2
         change_coo_y = (height - self.rect[3]) / 2
+        # print self.x - change_coo_x, self.y - change_coo_y
         self.screen.blit(copied_image, [self.x - change_coo_x, self.y - change_coo_y])
+
+       
 
         #################################
         # top_image should remain in the center of the vehicle while it rotates.
@@ -66,6 +70,7 @@ class Player(Sprite):
         y2 = pygame.mouse.get_pos()[1]
         centered_x = self.image_top.get_rect().center[0] 
         centered_y = self.image_top.get_rect().center[1]
+        print self.image_top.get_rect()
 
         #finding angle between mouse and tank
         dx = x2 - self.x - centered_x 
