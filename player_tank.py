@@ -23,80 +23,54 @@ class Player(Sprite):
         self.x = start_x
         self.y = start_y
 
-        self.x_top = 0
-        self.x_top = 0
+        # self.x_top = 0
+        # self.x_top = 0
         self.screen = screen
-        self.rect = pygame.Rect(self.x, self.y, 70, 70)
+        self.rect = pygame.Rect(self.x, self.y, 10, 10)
         
-		
-
-    # def update_me(self,player_pos): ## wtf i'm doing here????
-    #     self.x = player_pos[0]
-    #     self.y = player_pos[1]
-    #     if self.x > 690:             #set up the boundaries of the ship
-    #         self.x = 690
-    #     elif self.x < 10:
-    #         self.x = 10
-    #     elif self.y > 690:
-    #         self.y = 690
-    #     elif self.y < 10:
-    #         self.y = 10
-    #     else:
-    #         self.x = player_pos[0]
-    #         self.y = player_pos[1]
-    #     self.rect = pygame.Rect(self.x, self.y, 70, 70)
-
 	#	
 	# 2. The methods where you define all the class functions (methods)
     def draw_me(self):
-        #when the bottom rotates it changes its center, that's why we have to update the center while we rotate
+        #when the bottom rotates it changes its center, that's why we have to update top-left corner
+        # with every rotation. (self.x, self.y) become center of the image
         copied_image = self.image_bottom.copy()
         copied_image = pygame.transform.rotate(copied_image, self.bottom_angle)
-        width = copied_image.get_rect()[2]
-        height = copied_image.get_rect()[3]
-        # print copied_image.get_rect()
-        change_coo_x = (width - self.rect[2]) / 2
-        change_coo_y = (height - self.rect[3]) / 2
-        # print self.x - change_coo_x, self.y - change_coo_y
+        
+        change_coo_x = copied_image.get_rect().center[0] 
+        change_coo_y = copied_image.get_rect().center[1]
         self.screen.blit(copied_image, [self.x - change_coo_x, self.y - change_coo_y])
 
-       
-
         #################################
-        # top_image should remain in the center of the vehicle while it rotates.
-        #it should change its position too
-       
+        # top image rotates relative to mouse position
         x2 = pygame.mouse.get_pos()[0]
         y2 = pygame.mouse.get_pos()[1]
-        centered_x = self.image_top.get_rect().center[0] 
-        centered_y = self.image_top.get_rect().center[1]
-        print self.image_top.get_rect()
 
         #finding angle between mouse and tank
-        dx = x2 - self.x - centered_x 
-        dy = y2 - self.y - centered_y 
+        dx = x2 - self.x 
+        dy = y2 - self.y 
         rads = math.atan2(-dy, dx) % (2* math.pi)
         angle = math.degrees(rads)
         self.top_angle = angle
         
+        # print 'tank ' + str(self.x) + ' : ' + str(self.y)
+        # print pygame.mouse.get_pos()
+        
 
         #changes the relative center of image_top
         radians_top = self.top_angle * math.pi / 180
-        change_x = math.cos(radians_top) * (-20)   
+        change_x = math.cos(radians_top) * (20)   
         change_y = math.sin(radians_top) * (-20)
 
-        # changing the center while rotating 
+        # changing the top-left corner while rotating, self.x / y become center of the image
         copied_top = self.image_top.copy()
         copied_top = pygame.transform.rotate(copied_top, self.top_angle)
-        width_top = copied_top.get_rect()[2]
-        height_top = copied_top.get_rect()[3]
-        change_coo_x_top = (width_top - self.rect[2]) / 2
-        change_coo_y_top = (height_top - self.rect[3]) / 2
+        change_coo_x_top = copied_top.get_rect().center[0] 
+        change_coo_y_top = copied_top.get_rect().center[1] 
 
-        self.x_top = self.x - change_x - change_coo_x_top
-        self.y_top = self.y  + change_y - change_coo_y_top
+        # self.x_top = self.x - change_coo_x_top + change_x
+        # self.y_top = self.y - change_coo_y_top + change_y 
         
-        self.screen.blit(copied_top, [self.x_top,self.y_top])
+        self.screen.blit(copied_top, [self.x - change_coo_x_top + change_x , self.y - change_coo_y_top + change_y ])
 
     def turn_left(self):
         self.turn_speed = 5
@@ -119,6 +93,15 @@ class Player(Sprite):
         self.turn_speed = 0         
 
     def update(self):
+        # if self.x > 600:             #set up the boundaries of the screen
+        #     self.x = 600
+        # if self.x < 100:
+        #     self.x = 100
+        # if self.y > 500:
+        #     self.y = 500
+        # if self.y < 50:
+        #     self.y = 50
+
         # print self.x_top
         radians = self.bottom_angle * math.pi / 180
         add_x = math.cos(radians) * self.speed
@@ -127,6 +110,8 @@ class Player(Sprite):
         self.y -= add_y
 
         self.bottom_angle += self.turn_speed
+
+        
 
         
 

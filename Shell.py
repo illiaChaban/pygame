@@ -3,22 +3,26 @@ import pygame
 import math
 from pygame.sprite import Sprite
 class Shell(Sprite):
-    def __init__(self, image, screen, player, mouse_pos):
+    def __init__(self, image, screen, player): #, mouse_pos):
         super(Shell, self).__init__()
         self.image = pygame.image.load(image)
-        self.image = pygame.transform.scale(self.image, (5,15))
+        self.image = pygame.transform.scale(self.image, (5,5))
         self.screen = screen
-        self.speed = 0
+        self.speed = 20
         
         self.angle = player.top_angle
 
-        self.start_x = player.x_top
-        self.start_y = player.y_top
+        angle_radians = self.angle * math.pi / 180
 
-        self.mouse_pos = mouse_pos
+        self.start_x = player.x + math.cos(angle_radians)* 60 #_top
+        self.start_y = player.y - math.sin(angle_radians)* 60 #_top
 
-        self.x = player.x_top   #+ self.speed # why
-        self.y = player.y_top 
+        # self.mouse_pos = mouse_pos
+
+        self.x = self.start_x  #+ self.speed # why
+        self.y = self.start_y 
+        
+        self.mouse_pos = pygame.mouse.get_pos() #self.mouse_pos[0]
         
 
     def update(self, player):
@@ -28,8 +32,6 @@ class Shell(Sprite):
         y2 = self.mouse_pos[1]
         
         self.rect = pygame.Rect(self.x, self.y, 20, 20)
-        # shot_length = (x2 - self.start_x) / math.cos(angle_radians)
-        # shot_length_real = (self.x - self.start_x )/ math.cos(angle_radians)
 
         shot_length = math.sqrt((x2 - self.start_x)**2 +(y2 - self.start_y)**2)
         shot_length_real = math.sqrt((self.x - self.start_x)**2 + (self.y - self.start_y)**2)
@@ -82,8 +84,8 @@ class Shell(Sprite):
         height = copied_image.get_rect()[3]
 
         # center image
-        change_coo_x = (width - self.rect[2]) / 2
-        change_coo_y = (height - self.rect[3]) / 2
+        change_coo_x = self.image.get_rect().center[0]
+        change_coo_y = self.image.get_rect().center[1]
 
         #change the starting point of the shell ( actual center)
         # change_x = 

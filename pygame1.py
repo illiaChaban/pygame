@@ -36,7 +36,7 @@ def main():
     clock = pygame.time.Clock()
     background = pygame.image.load('images/background_desert1.png')
     background = pygame.transform.scale(background, (width,height))
-    the_player = Player("images/tank_bottom_new_cropped2.png", "images/tank_top_new_cropped2.png", 350, 350, screen)
+    the_player = Player("images/tank_bottom_new_cropped3.png", "images/tank_top_new_cropped7.png", 350, 350, screen)
     #do we even need this?
     players = Group()
     players.add(the_player)
@@ -88,8 +88,7 @@ def main():
                 pass
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                new_shell = Shell("images/tank_shell1_cropped.png", screen, the_player, mouse_pos)
+                new_shell = Shell("images/bullet.png", screen, the_player)   #tank_shell1_cropped.png
                 shells.add(new_shell)
                 # the_player.shoot()
                 # if event.key          
