@@ -28,13 +28,27 @@ class Player(Sprite):
         # self.x_top = 0
         # self.x_top = 0
         self.screen = screen
+        self.screen_width = self.screen.get_rect()[2]
+        self.screen_height = self.screen.get_rect()[3]
+
         self.rect = pygame.Rect(self.x, self.y, 10, 10)
 
-       
+
+        self.cool_down = 700
+        self.last_shot_tick = 0
+
+        self.shell_image = pygame.image.load("images/tank_shell1_cropped.png")
+        self.shell_image = pygame.transform.scale(self.shell_image, (10, 50))
+        
+        
         
 	#	
 	# 2. The methods where you define all the class functions (methods)
     def draw_me(self):
+
+        self.draw_reload_bar()
+
+
         #when the bottom rotates it changes its center, that's why we have to update top-left corner
         # with every rotation. (self.x, self.y) become center of the image
         copied_image = self.image_bottom.copy()
@@ -114,6 +128,36 @@ class Player(Sprite):
         self.y -= add_y
 
         self.bottom_angle += self.turn_speed
+
+    def draw_reload_bar(self):
+
+        reload0 = pygame.image.load("images/reload_bar0.png")
+        reload0 = pygame.transform.scale( reload0, (15,50))
+
+        reload1 = pygame.image.load("images/reload_bar1.png")
+        reload1 = pygame.transform.scale( reload1, (15,50))
+
+        reload2 = pygame.image.load("images/reload_bar2.png")
+        reload2 = pygame.transform.scale( reload2, (15,50))
+
+        reload3 = pygame.image.load("images/reload_bar3.png")
+        reload3 = pygame.transform.scale( reload3, (15,50))
+
+        current_tick = pygame.time.get_ticks()
+
+        self.screen.blit(self.shell_image, [self.screen_width - 20, self.screen_height - 60])
+
+        if current_tick - self.last_shot_tick < 175:
+            self.screen.blit(reload0, [self.screen_width - 22, self.screen_height - 60])
+        elif current_tick - self.last_shot_tick < 350:
+            self.screen.blit(reload1, [self.screen_width - 22, self.screen_height - 60])
+        elif current_tick - self.last_shot_tick < 525:
+            self.screen.blit(reload2, [self.screen_width - 22, self.screen_height - 60])
+        elif current_tick - self.last_shot_tick < 700:
+            self.screen.blit(reload3, [self.screen_width - 22, self.screen_height - 60])
+        else:
+            pass
+
 
         
 

@@ -92,11 +92,22 @@ def main():
                 x2 = pygame.mouse.get_pos()[0]
                 y2 = pygame.mouse.get_pos()[1]
                 
-                shot_length = math.sqrt((x2 - the_player.x)**2 +(y2 - the_player.y)**2)
-                # print shot_length
-                if shot_length > 85:
-                    new_shell = Shell("images/tank_shell5.png", screen, the_player)   #tank_shell1_cropped.png
-                    shells.add(new_shell)
+                current_tick = pygame.time.get_ticks()
+                
+
+                if (current_tick - the_player.last_shot_tick) > the_player.cool_down:
+
+                
+                    shot_length = math.sqrt((x2 - the_player.x)**2 +(y2 - the_player.y)**2)
+                    # print shot_length
+                    if shot_length > 85:
+                        new_shell = Shell("images/tank_shell5.png", screen, the_player)   #tank_shell1_cropped.png
+                        shells.add(new_shell)
+                        the_player.last_shot_tick = new_shell.shot_start_tick
+                        print the_player.last_shot_tick
+
+                # elif current_tick - the_player.last_shot_tick < 175:
+                #     screen.blit()
                 # the_player.shoot()
                 # if event.key          
             # if event.type == pygame.KEYUP:

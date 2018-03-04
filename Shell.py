@@ -11,6 +11,7 @@ class Shell(Sprite):
         super(Shell, self).__init__()
         self.image = pygame.image.load(image)
         self.image = pygame.transform.scale(self.image, (15,15))
+
         self.screen = screen
         self.speed = 20
         
@@ -23,9 +24,7 @@ class Shell(Sprite):
         self.start_x = player.x + math.cos(self.angle_rad)* 50 #_top
         self.start_y = player.y - math.sin(self.angle_rad)* 50 #_top
 
-        # self.mouse_pos = mouse_pos
-
-        self.x = self.start_x  #+ self.speed # why
+        self.x = self.start_x  
         self.y = self.start_y 
         
         self.mouse_pos = pygame.mouse.get_pos() #self.mouse_pos[0]
@@ -47,13 +46,18 @@ class Shell(Sprite):
         self.explosion1 = pygame.image.load("images/explosion1.png")
         self.explosion1 = pygame.transform.scale(self.explosion1, (60,60))
 
+        self.shot_start_tick = pygame.time.get_ticks()
         self.shot_end_tick = 0
+        
         
 
     
 
     def update(self, player):
 
+        
+            
+            
         
         #make it explode at the mouse positin
         angle_radians = self.angle * math.pi / 180
