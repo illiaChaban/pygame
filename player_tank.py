@@ -16,6 +16,8 @@ class Player(Sprite):
         self.bottom_angle = 0 
         self.top_angle = 0
 
+        self.top_angle_rad = self.top_angle * math.pi / 180
+
         
         self.speed = 0
         self.turn_speed = 0
@@ -27,6 +29,8 @@ class Player(Sprite):
         # self.x_top = 0
         self.screen = screen
         self.rect = pygame.Rect(self.x, self.y, 10, 10)
+
+       
         
 	#	
 	# 2. The methods where you define all the class functions (methods)

@@ -88,8 +88,15 @@ def main():
                 pass
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                new_shell = Shell("images/bullet.png", screen, the_player)   #tank_shell1_cropped.png
-                shells.add(new_shell)
+                # print math.fabs((pygame.mouse.get_pos()[0] - the_player.x) / math.cos(the_player.top_angle_rad))
+                x2 = pygame.mouse.get_pos()[0]
+                y2 = pygame.mouse.get_pos()[1]
+                
+                shot_length = math.sqrt((x2 - the_player.x)**2 +(y2 - the_player.y)**2)
+                # print shot_length
+                if shot_length > 85:
+                    new_shell = Shell("images/tank_shell5.png", screen, the_player)   #tank_shell1_cropped.png
+                    shells.add(new_shell)
                 # the_player.shoot()
                 # if event.key          
             # if event.type == pygame.KEYUP:
