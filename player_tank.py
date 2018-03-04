@@ -52,7 +52,7 @@ class Player(Sprite):
         #finding angle between mouse and tank
         dx = x2 - self.x 
         dy = y2 - self.y 
-        rads = math.atan2(-dy, dx) % (2* math.pi)
+        rads = math.atan2(-dy, dx) #% (2* math.pi)
         angle = math.degrees(rads)
         self.top_angle = angle
         

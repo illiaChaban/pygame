@@ -32,13 +32,13 @@ class Shell(Sprite):
 
          #add fire the moment tank shoots
         self.fire0 = pygame.image.load("images/tank_fire01.png")
-        self.fire0 = pygame.transform.scale(self.fire0, (20,20))
+        self.fire0 = pygame.transform.scale(self.fire0, (30,30))
         
         self.fire1 = pygame.image.load("images/tank_fire11.png")
-        self.fire1 = pygame.transform.scale(self.fire1, (20,20))
+        self.fire1 = pygame.transform.scale(self.fire1, (30,30))
 
         self.fire2 = pygame.image.load("images/tank_fire21.png")
-        self.fire2 = pygame.transform.scale(self.fire2, (20,20))
+        self.fire2 = pygame.transform.scale(self.fire2, (30,30))
 
 
         self.explosion0 = pygame.image.load("images/explosion0.png")
@@ -114,17 +114,17 @@ class Shell(Sprite):
         copied_fire2 = self.fire2.copy()
         copied_fire2 = pygame.transform.rotate(copied_fire2, self.angle)
 
-        change_x0 = self.fire0.get_rect().center[0]
-        change_y0 = self.fire0.get_rect().center[1]
+        change_x0 = copied_fire0.get_rect().center[0]
+        change_y0 = copied_fire0.get_rect().center[1]
 
-        change_x1 = self.fire1.get_rect().center[0]
-        change_y1 = self.fire1.get_rect().center[1]
+        change_x1 = copied_fire1.get_rect().center[0]
+        change_y1 = copied_fire1.get_rect().center[1]
 
-        change_x2 = self.fire2.get_rect().center[0]
-        change_y2 = self.fire2.get_rect().center[1]
+        change_x2 = copied_fire2.get_rect().center[0]
+        change_y2 = copied_fire2.get_rect().center[1]
 
-        far_from_center_x = math.cos(self.angle_rad) * 10
-        far_from_center_y = - math.sin(self.angle_rad) * 10
+        far_from_center_x = math.cos(self.angle_rad) * 15
+        far_from_center_y = - math.sin(self.angle_rad) * 15
 
 
        
@@ -184,8 +184,8 @@ class Shell(Sprite):
             copied_image = self.image.copy()
             copied_image = pygame.transform.rotate(copied_image, self.angle - 90)
         
-            change_coo_x = self.image.get_rect().center[0]
-            change_coo_y = self.image.get_rect().center[1]
+            change_coo_x = copied_image.get_rect().center[0]
+            change_coo_y = copied_image.get_rect().center[1]
 
             self.screen.blit(copied_image, [self.x - change_coo_x , self.y - change_coo_y ])
             
