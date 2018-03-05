@@ -31,10 +31,10 @@ class Player(Sprite):
         self.screen_width = self.screen.get_rect()[2]
         self.screen_height = self.screen.get_rect()[3]
 
-        self.rect = pygame.Rect(self.x, self.y, 10, 10)
+        self.rect = pygame.Rect(self.x, self.y, 72, 38)
 
 
-        self.cool_down = 700
+        self.cool_down = 1400
         self.last_shot_tick = 0
 
         self.shell_image = pygame.image.load("images/tank_shell1_cropped.png")
@@ -57,6 +57,9 @@ class Player(Sprite):
         change_coo_x = copied_image.get_rect().center[0] 
         change_coo_y = copied_image.get_rect().center[1]
         self.screen.blit(copied_image, [self.x - change_coo_x, self.y - change_coo_y])
+
+        # self.rect = pygame.transform.rotate(self.rect, self.bottom_angle)
+        # print self.rect
 
         #################################
         # top image rotates relative to mouse position
@@ -131,47 +134,35 @@ class Player(Sprite):
 
     def draw_reload_bar(self):
 
-        reload0 = pygame.image.load("images/reload_bar0.png")
-        reload0 = pygame.transform.scale( reload0, (15,50))
+        reload0 = pygame.image.load("images/reload_bar01.png")
+        reload0 = pygame.transform.scale( reload0, (10,50))
 
-        reload1 = pygame.image.load("images/reload_bar1.png")
-        reload1 = pygame.transform.scale( reload1, (15,50))
+        reload1 = pygame.image.load("images/reload_bar11.png")
+        reload1 = pygame.transform.scale( reload1, (10,50))
 
-        reload2 = pygame.image.load("images/reload_bar2.png")
-        reload2 = pygame.transform.scale( reload2, (15,50))
+        reload2 = pygame.image.load("images/reload_bar21.png")
+        reload2 = pygame.transform.scale( reload2, (10,50))
 
-        reload3 = pygame.image.load("images/reload_bar3.png")
-        reload3 = pygame.transform.scale( reload3, (15,50))
+        reload3 = pygame.image.load("images/reload_bar31.png")
+        reload3 = pygame.transform.scale( reload3, (10,50))
 
         current_tick = pygame.time.get_ticks()
 
-        self.screen.blit(self.shell_image, [self.screen_width - 20, self.screen_height - 60])
+        
 
-        if current_tick - self.last_shot_tick < 175:
-            self.screen.blit(reload0, [self.screen_width - 22, self.screen_height - 60])
-        elif current_tick - self.last_shot_tick < 350:
-            self.screen.blit(reload1, [self.screen_width - 22, self.screen_height - 60])
-        elif current_tick - self.last_shot_tick < 525:
-            self.screen.blit(reload2, [self.screen_width - 22, self.screen_height - 60])
-        elif current_tick - self.last_shot_tick < 700:
-            self.screen.blit(reload3, [self.screen_width - 22, self.screen_height - 60])
+        if current_tick - self.last_shot_tick < self.cool_down / 4:
+            self.screen.blit(reload0, [self.screen_width - 20, self.screen_height - 60])
+        elif current_tick - self.last_shot_tick < self.cool_down / 4 * 2:
+            self.screen.blit(reload1, [self.screen_width - 20, self.screen_height - 60])
+        elif current_tick - self.last_shot_tick < self.cool_down / 4 * 3:
+            self.screen.blit(reload2, [self.screen_width - 20, self.screen_height - 60])
+        elif current_tick - self.last_shot_tick < self.cool_down:
+            self.screen.blit(reload3, [self.screen_width - 20, self.screen_height - 60])
         else:
-            pass
+            self.screen.blit(self.shell_image, [self.screen_width - 20, self.screen_height - 60])
 
 
         
-
-        
-
-    # def shoot(self):
-    #     shell_speed = 40
-    #     #check top_angle
-    #     start_x = self.x
-    #     start_y = self.y
-    #     end_x = pygame.mouse.get_pos()[0]
-    #     end_y = pygame.mouse.get_pos()[1]
-    #     print start_x
-    #     self.top_angle 
 
     
 

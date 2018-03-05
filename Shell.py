@@ -46,6 +46,15 @@ class Shell(Sprite):
         self.explosion1 = pygame.image.load("images/explosion1.png")
         self.explosion1 = pygame.transform.scale(self.explosion1, (60,60))
 
+        self.explosion2 = pygame.image.load("images/explosion2.png")
+        self.explosion2 = pygame.transform.scale(self.explosion2, (60,60))
+
+        self.explosion3 = pygame.image.load("images/explosion3.png")
+        self.explosion3 = pygame.transform.scale(self.explosion3, (60,60))
+
+        self.explosion4 = pygame.image.load("images/explosion4.png")
+        self.explosion4 = pygame.transform.scale(self.explosion4, (60,60))
+
         self.shot_start_tick = pygame.time.get_ticks()
         self.shot_end_tick = 0
         
@@ -170,8 +179,12 @@ class Shell(Sprite):
                 self.screen.blit(self.explosion0, [self.x - change_coo, self.y - change_coo])
             elif current_tick - self.shot_end_tick < 130:
                 self.screen.blit(self.explosion1, [self.x - change_coo, self.y - change_coo])
-            elif current_tick - self.shot_end_tick < 190:
-                self.screen.blit(self.explosion0, [self.x - change_coo, self.y - change_coo])
+            elif current_tick - self.shot_end_tick < 200:
+                self.screen.blit(self.explosion2, [self.x - change_coo, self.y - change_coo])
+            elif current_tick - self.shot_end_tick < 270:
+                self.screen.blit(self.explosion3, [self.x - change_coo, self.y - change_coo])
+            elif current_tick - self.shot_end_tick < 320:
+                self.screen.blit(self.explosion4, [self.x - change_coo, self.y - change_coo])
             else:
                 pass
 
