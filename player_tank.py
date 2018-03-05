@@ -1,5 +1,3 @@
-#player's tank
-
 import pygame
 from pygame.sprite import Sprite
 import math
@@ -7,17 +5,14 @@ import math
 class Player(Sprite):
     def __init__(self, image_bottom, image_top , start_x, start_y, screen):
         super(Player,self).__init__()
-        #why do we need super??
         self.image_bottom = pygame.image.load(image_bottom)
         self.image_bottom = pygame.transform.scale(self.image_bottom,(74,38))
+
         self.image_top = pygame.image.load(image_top)
         self.image_top = pygame.transform.scale(self.image_top,(72, 28))
         
         self.bottom_angle = 0 
         self.top_angle = 0
-
-        self.top_angle_rad = self.top_angle * math.pi / 180
-
         
         self.speed = 0
         self.turn_speed = 0
@@ -25,8 +20,6 @@ class Player(Sprite):
         self.x = start_x
         self.y = start_y
 
-        # self.x_top = 0
-        # self.x_top = 0
         self.screen = screen
         self.screen_width = self.screen.get_rect()[2]
         self.screen_height = self.screen.get_rect()[3]
@@ -47,51 +40,14 @@ class Player(Sprite):
     def draw_me(self):
 
         self.draw_reload_bar()
-
-
-        #when the bottom rotates it changes its center, that's why we have to update top-left corner
-        # with every rotation. (self.x, self.y) become center of the image
-        copied_image = self.image_bottom.copy()
-        copied_image = pygame.transform.rotate(copied_image, self.bottom_angle)
-        
-        change_coo_x = copied_image.get_rect().center[0] 
-        change_coo_y = copied_image.get_rect().center[1]
-        self.screen.blit(copied_image, [self.x - change_coo_x, self.y - change_coo_y])
+        self.draw_bottom()
+        self.draw_top()
 
         # self.rect = pygame.transform.rotate(self.rect, self.bottom_angle)
         # print self.rect
 
         #################################
-        # top image rotates relative to mouse position
-        x2 = pygame.mouse.get_pos()[0]
-        y2 = pygame.mouse.get_pos()[1]
-
-        #finding angle between mouse and tank
-        dx = x2 - self.x 
-        dy = y2 - self.y 
-        rads = math.atan2(-dy, dx) #% (2* math.pi)
-        angle = math.degrees(rads)
-        self.top_angle = angle
         
-        # print 'tank ' + str(self.x) + ' : ' + str(self.y)
-        # print pygame.mouse.get_pos()
-        
-
-        #changes the relative center of image_top
-        radians_top = self.top_angle * math.pi / 180
-        change_x = math.cos(radians_top) * (20)   
-        change_y = math.sin(radians_top) * (-20)
-
-        # changing the top-left corner while rotating, self.x / y become center of the image
-        copied_top = self.image_top.copy()
-        copied_top = pygame.transform.rotate(copied_top, self.top_angle)
-        change_coo_x_top = copied_top.get_rect().center[0] 
-        change_coo_y_top = copied_top.get_rect().center[1] 
-
-        # self.x_top = self.x - change_coo_x_top + change_x
-        # self.y_top = self.y - change_coo_y_top + change_y 
-        
-        self.screen.blit(copied_top, [self.x - change_coo_x_top + change_x , self.y - change_coo_y_top + change_y ])
 
     def turn_left(self):
         self.turn_speed = 5
@@ -123,7 +79,7 @@ class Player(Sprite):
         # if self.y < 50:
         #     self.y = 50
 
-        # print self.x_top
+        # moving forward
         radians = self.bottom_angle * math.pi / 180
         add_x = math.cos(radians) * self.speed
         add_y = math.sin(radians) * self.speed
@@ -132,6 +88,9 @@ class Player(Sprite):
 
         self.bottom_angle += self.turn_speed
 
+        self.top_angle = self.find_mouse_angle()
+
+   
     def draw_reload_bar(self):
 
         reload0 = pygame.image.load("images/reload_bar01.png")
@@ -148,7 +107,7 @@ class Player(Sprite):
 
         current_tick = pygame.time.get_ticks()
 
-        
+        #reload bar changes image depending on a time passed since last shot
 
         if current_tick - self.last_shot_tick < self.cool_down / 4:
             self.screen.blit(reload0, [self.screen_width - 20, self.screen_height - 60])
@@ -162,7 +121,49 @@ class Player(Sprite):
             self.screen.blit(self.shell_image, [self.screen_width - 20, self.screen_height - 60])
 
 
+    def draw_bottom(self):
+        #when the bottom rotates it changes its center, that's why we have to update top-left corner
+        # with every rotation. (self.x, self.y) become center of the image
+        copied_image = self.image_bottom.copy()
+        copied_image = pygame.transform.rotate(copied_image, self.bottom_angle)
         
+        change_coo_x = copied_image.get_rect().center[0] 
+        change_coo_y = copied_image.get_rect().center[1]
+        self.screen.blit(copied_image, [self.x - change_coo_x, self.y - change_coo_y])
+
+   
+    def draw_top(self):
+        rads = self.find_mouse_angle_rad()
+        
+        #changes the relative center of image_top
+        change_x = math.cos(rads) * (20)   
+        change_y = math.sin(rads) * (-20)
+
+        # changing the top-left corner while rotating, self.x / y become center of the image
+        copied_top = self.image_top.copy()
+        copied_top = pygame.transform.rotate(copied_top, self.top_angle)
+        change_coo_x_top = copied_top.get_rect().center[0] 
+        change_coo_y_top = copied_top.get_rect().center[1] 
+        
+        self.screen.blit(copied_top, [self.x - change_coo_x_top + change_x , self.y - change_coo_y_top + change_y ])
+
+    
+    def find_mouse_angle_rad(self):
+        # top image rotates relative to mouse position
+        x2 = pygame.mouse.get_pos()[0]
+        y2 = pygame.mouse.get_pos()[1]
+
+        #finding angle between mouse and tank
+        dx = x2 - self.x 
+        dy = y2 - self.y 
+        radians = math.atan2(-dy, dx)
+        return radians
+
+    
+    def find_mouse_angle(self):
+        rads = self.find_mouse_angle_rad()
+        return math.degrees(rads)
+
 
     
 
