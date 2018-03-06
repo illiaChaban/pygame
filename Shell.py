@@ -27,105 +27,87 @@ class Shell(Sprite):
         self.x = self.start_x  
         self.y = self.start_y 
         
-        self.mouse_pos = pygame.mouse.get_pos() #self.mouse_pos[0]
-
-         #add fire the moment tank shoots
-        self.fire0 = pygame.image.load("images/tank_fire01.png")
-        self.fire0 = pygame.transform.scale(self.fire0, (30,30))
+        self.mouse_pos = pygame.mouse.get_pos()
         
-        self.fire1 = pygame.image.load("images/tank_fire11.png")
-        self.fire1 = pygame.transform.scale(self.fire1, (30,30))
-
-        self.fire2 = pygame.image.load("images/tank_fire21.png")
-        self.fire2 = pygame.transform.scale(self.fire2, (30,30))
-
-
-        self.explosion0 = pygame.image.load("images/explosion0.png")
-        self.explosion0 = pygame.transform.scale(self.explosion0, (60,60))
-
-        self.explosion1 = pygame.image.load("images/explosion1.png")
-        self.explosion1 = pygame.transform.scale(self.explosion1, (60,60))
-
-        self.explosion2 = pygame.image.load("images/explosion2.png")
-        self.explosion2 = pygame.transform.scale(self.explosion2, (60,60))
-
-        self.explosion3 = pygame.image.load("images/explosion3.png")
-        self.explosion3 = pygame.transform.scale(self.explosion3, (60,60))
-
-        self.explosion4 = pygame.image.load("images/explosion4.png")
-        self.explosion4 = pygame.transform.scale(self.explosion4, (60,60))
+        self.load_scaled_fires()
+        self.load_scaled_explosions()
 
         self.shot_start_tick = pygame.time.get_ticks()
         self.shot_end_tick = 0
         
         
+    def draw_shot(self):
+        self.draw_fire()
+        if self.shot_length - self.shot_length_current == 0:
+            self.draw_explosion()
+        else: 
+            self.draw_bullet()
 
-    
 
     def update(self, player):
 
-        
-            
-            
-        
-        #make it explode at the mouse positin
-        angle_radians = self.angle * math.pi / 180
         x2 = self.mouse_pos[0]
         y2 = self.mouse_pos[1]
         
-        self.rect = pygame.Rect(self.x, self.y, 20, 20)
-
-        shot_length = math.sqrt((x2 - self.start_x)**2 +(y2 - self.start_y)**2)
-        shot_length_real = math.sqrt((self.x - self.start_x)**2 + (self.y - self.start_y)**2)
+        # self.rect = pygame.Rect(self.x, self.y, 20, 20)
+        self.shot_length = math.sqrt((x2 - self.start_x)**2 +(y2 - self.start_y)**2)
+        self.shot_length_current = math.sqrt((self.x - self.start_x)**2 + (self.y - self.start_y)**2)
         
-        self.shot_length = shot_length
-        self.shot_length_current = shot_length_real
-        
-        if (shot_length - shot_length_real) < self.speed:
+        if (self.shot_length - self.shot_length_current) < self.speed:
             self.x = x2
             self.y = y2
             
             #i can put it beyond the screen instead
-        elif shot_length > shot_length_real:
+        elif self.shot_length > self.shot_length_current:
             
-            self.x += self.speed * math.cos(angle_radians)
-            self.y -= self.speed * math.sin(angle_radians)
+            self.x += self.speed * math.cos(self.angle_rad)
+            self.y -= self.speed * math.sin(self.angle_rad)
             # self.y -= math.sqrt((self.speed ** 2) - (self.speed * math.cos(angle_radians))**2)
             
             # print self.x, start_x
 
             ## change self.x, y like top_image
-        else:
-            self.x = x2
-            self.y = y2
-            print "stopped shooting"
-            ##add explosion
-            return
+        # else:
+        #     self.x = x2
+        #     self.y = y2
+        #     print "stopped shooting"
+        #     ##add explosion
+        #     return
         
+        #update last tick
         if self.shot_length - self.shot_length_current > 0:
             self.shot_end_tick = pygame.time.get_ticks()
-        #add explosion here
-            
-    # def get_tick(self):
-    #     if self.shot_length - self.shot_length_current > 0:
-    #         last_tick = pygame.time.get_ticks()
-    #     else:
-    #         last_tick = 0
-    #     return last_tick
 
+
+
+    def load_scaled_fires(self):
+        self.fire0 = self.load_scale("images/tank_fire01.png", (30,30))
+        self.fire1 = self.load_scale("images/tank_fire11.png", (30,30))
+        self.fire2 = self.load_scale("images/tank_fire21.png", (30,30))
+
+    def load_scaled_explosions(self):   
+        self.explosion0 = self.load_scale("images/explosion0.png", (60,60))
+        self.explosion1 = self.load_scale("images/explosion1.png", (60,60))
+        self.explosion2 = self.load_scale("images/explosion2.png", (60,60))
+        self.explosion3 = self.load_scale("images/explosion3.png", (60,60))
+        self.explosion4 = self.load_scale("images/explosion4.png", (60,60))
 
     
-    def draw_shot(self):
+    def load_scale(self, image_address, scale_tuple):
+        loaded_image = pygame.image.load(image_address)
+        scaled_image = pygame.transform.scale(loaded_image, scale_tuple)
+        return scaled_image
+        
 
-        #displaying fire when shooting
-        copied_fire0 = self.fire0.copy()
-        copied_fire0 = pygame.transform.rotate(copied_fire0, self.angle)
-
-        copied_fire1 = self.fire1.copy()
-        copied_fire1 = pygame.transform.rotate(copied_fire1, self.angle)
-
-        copied_fire2 = self.fire2.copy()
-        copied_fire2 = pygame.transform.rotate(copied_fire2, self.angle)
+    def copy_rotate(self, image, angle):
+        copied_image = image.copy()
+        copied_image = pygame.transform.rotate(copied_image, angle)
+        return copied_image
+    
+    def draw_fire(self):
+        copied_fire0 = self.copy_rotate(self.fire0, self.angle)
+        copied_fire1 = self.copy_rotate(self.fire1, self.angle)
+        copied_fire2 = self.copy_rotate(self.fire2, self.angle)
 
         change_x0 = copied_fire0.get_rect().center[0]
         change_y0 = copied_fire0.get_rect().center[1]
@@ -138,75 +120,47 @@ class Shell(Sprite):
 
         far_from_center_x = math.cos(self.angle_rad) * 15
         far_from_center_y = - math.sin(self.angle_rad) * 15
-
-
        
         if (self.shot_length > 80):
-            
             if self.shot_length_current < 23:
                 self.screen.blit(copied_fire0, [self.start_x - change_x0 + far_from_center_x, self.start_y - change_y0 + far_from_center_y])
-                
             elif self.shot_length_current < 63:
                 self.screen.blit(copied_fire1, [self.start_x - change_x1 + far_from_center_x, self.start_y - change_y1  + far_from_center_y])
             elif self.shot_length_current < 80:
                 self.screen.blit( copied_fire1, [self.start_x - change_x2 + far_from_center_x, self.start_y - change_y2  + far_from_center_y])
-            else:
-                pass
+        
         elif self.shot_length > 25:
             if self.shot_length_current < 20:
                 self.screen.blit(copied_fire1, [self.start_x - change_x1 + far_from_center_x, self.start_y - change_y1  + far_from_center_y])
             elif self.shot_length_current < 25:
                 self.screen.blit(copied_fire2, [self.start_x - change_x2 + far_from_center_x, self.start_y - change_y2 + far_from_center_y] )
-            else: 
-                pass
-            pass
 
-       
-
-        # if self.shot_length - self.shot_length_current > 0:
-            
-        #     last_tick = pygame.time.get_ticks()
-
-        #displaying explosion
-        if self.shot_length - self.shot_length_current == 0:
-            #recentering
-            change_coo = self.explosion0.get_rect().center[0]
-            
-            current_tick = pygame.time.get_ticks()
-
-             
-            if current_tick - self.shot_end_tick < 60:
-                self.screen.blit(self.explosion0, [self.x - change_coo, self.y - change_coo])
-            elif current_tick - self.shot_end_tick < 130:
-                self.screen.blit(self.explosion1, [self.x - change_coo, self.y - change_coo])
-            elif current_tick - self.shot_end_tick < 200:
-                self.screen.blit(self.explosion2, [self.x - change_coo, self.y - change_coo])
-            elif current_tick - self.shot_end_tick < 270:
-                self.screen.blit(self.explosion3, [self.x - change_coo, self.y - change_coo])
-            elif current_tick - self.shot_end_tick < 320:
-                self.screen.blit(self.explosion4, [self.x - change_coo, self.y - change_coo])
-            else:
-                pass
-
-                
-                
-            # print self.shot_end_tick
-            # print clock.tick()
-            # print pygame.time.get_ticks()
-            # print pygame.time.Clock.get_fps()
-
-
-        else: 
-            # displaying bullet
-            copied_image = self.image.copy()
-            copied_image = pygame.transform.rotate(copied_image, self.angle - 90)
+    def draw_explosion(self):
+        #recentering
+        change_coo = self.explosion0.get_rect().center[0]
         
-            change_coo_x = copied_image.get_rect().center[0]
-            change_coo_y = copied_image.get_rect().center[1]
+        current_tick = pygame.time.get_ticks()
 
-            self.screen.blit(copied_image, [self.x - change_coo_x , self.y - change_coo_y ])
-            
-            # self.screen.blit(copied_image, [self.x, self.y])
+        if current_tick - self.shot_end_tick < 60:
+            self.screen.blit(self.explosion0, [self.x - change_coo, self.y - change_coo])
+        elif current_tick - self.shot_end_tick < 130:
+            self.screen.blit(self.explosion1, [self.x - change_coo, self.y - change_coo])
+        elif current_tick - self.shot_end_tick < 200:
+            self.screen.blit(self.explosion2, [self.x - change_coo, self.y - change_coo])
+        elif current_tick - self.shot_end_tick < 270:
+            self.screen.blit(self.explosion3, [self.x - change_coo, self.y - change_coo])
+        elif current_tick - self.shot_end_tick < 320:
+            self.screen.blit(self.explosion4, [self.x - change_coo, self.y - change_coo])
+
+
+    def draw_bullet(self):
+        copied_bullet = self.copy_rotate(self.image, self.angle - 90)
+        
+        change_coo_x = copied_bullet.get_rect().center[0]
+        change_coo_y = copied_bullet.get_rect().center[1]
+
+        self.screen.blit(copied_bullet, [self.x - change_coo_x , self.y - change_coo_y ])
+
 
     def beyond_screen(self):
         #hardcoding width and height of the screen
