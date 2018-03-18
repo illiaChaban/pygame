@@ -4,6 +4,7 @@ import math
 import time
 from pygame.sprite import Group, groupcollide # why do we need it????
 from Shell import Shell
+from collision import Block
 
 KEY_UP = 273
 KEY_DOWN = 274
@@ -41,6 +42,7 @@ def main():
     players = Group()
     players.add(the_player)
     #
+    square = Block( 200, 200, (0,0,0) , 50, 50, screen)
     
     shells = Group()
     
@@ -122,20 +124,24 @@ def main():
    
         screen.blit(background, [0,0])
         
-        the_player.draw_me()
+        
         
 
-        #shell display
+       
+        
 
+        # Game display
+        square.render()
+        the_player.draw_me()
+
+        #shell display
         for shell in shells:
             shell.update(the_player)
             shell.draw_shot()
             if shell.beyond_screen():
                 shells.remove(shell)
                 #or if shell reached mouse_pos
-
-        # Game display
-
+                
         pygame.display.update()
         clock.tick(60)
 

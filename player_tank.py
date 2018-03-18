@@ -102,7 +102,7 @@ class Player(Sprite):
         reload2 = pygame.image.load("images/reload_bar21.png")
         reload2 = pygame.transform.scale( reload2, (10,50))
 
-        reload3 = pygame.image.load("images/reload_bar31.png")
+        reload3 = pygame.image.load("images/reload_bar311.png")
         reload3 = pygame.transform.scale( reload3, (10,50))
 
         current_tick = pygame.time.get_ticks()
