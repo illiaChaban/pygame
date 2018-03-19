@@ -4,7 +4,7 @@ from pygame.sprite import Sprite
 
 class Block(Sprite):
     def __init__(self, x, y, color, width, height, screen):
-
+        super(Block,self).__init__()
         self.image = pygame.Surface([width, height])
         self.image.fill(color)
 
@@ -58,14 +58,16 @@ class Block(Sprite):
         return False
 
     def me_within_its_area(self, player):
-        pass
+        for corner in self.cornersList:
+            if player.point_within_my_area(corner):
+                return True
+        return False
 
 
 
     def detect_collision(self, player):
-        if self.it_within_my_area(player): #or self.inside_its_area(player):
-            return True
-        return False
+        return self.it_within_my_area(player) or self.me_within_its_area(player)
+
     
 
     def point_within_my_area(self, point_coordinates):
@@ -82,9 +84,8 @@ class Block(Sprite):
         p_x = point_coordinates[0]
         p_y = point_coordinates[1]
 
-        if p_x >= x1 and p_x <= x4 and p_y >= y1 and p_y <= y4:
-            return True
-        return False
+        return p_x >= x1 and p_x <= x4 and p_y >= y1 and p_y <= y4
+
 
 
     

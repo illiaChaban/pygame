@@ -43,6 +43,7 @@ def main():
     players.add(the_player)
     #
     square = Block( 200, 200, (0,0,0) , 50, 50, screen)
+    players.add(square)
     
     shells = Group()
     
@@ -117,7 +118,7 @@ def main():
             #     the_player.bottom_angle += 3
            
         # Game logic
-        the_player.update()
+        the_player.update(players)
         
 
         # Draw background
