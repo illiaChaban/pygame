@@ -4,31 +4,88 @@ from pygame.sprite import Sprite
 
 class Block(Sprite):
     def __init__(self, x, y, color, width, height, screen):
-        # Create an image of the block, and fill it with a color.
-        # This could also be an image loaded from the disk.
+
         self.image = pygame.Surface([width, height])
         self.image.fill(color)
 
         self.image_red = pygame.Surface([width, height])
         self.image_red.fill((255, 0, 0))
 
-        # Fetch the rectangle object that has the dimensions of the image
-        # Update the position of this object by setting the values of rect.x and rect.y
         self.rect = self.image.get_rect()
         self.screen = screen   
         self.x = x
         self.y = y
+        self.width = width
+        self.height = height
         self.rect = self.image.get_rect()
 
-    def detect_collision(self, area):
-        if (False):
+        self.cornersList = self.find_corners()
+
+
+
+
+
+    def render(self, player):
+               
+        # def wrapper():
+        #     return area(self.cornersList) 
+        
+        if self.detect_collision(player):
+            self.screen.blit(self.image_red, [self.x, self.y])
+        else: self.screen.blit(self.image, [self.x, self.y])
+
+        # print '#######', self.x, self.y
+        # print '#######', self.x + self.width, self.y + self.height
+
+    def find_corners(self):
+        cornersList = []
+        top_left_corner = [self.x, self.y]
+        top_right_corner = [self.x + self.width, self.y]
+        bottom_left_corner = [self.x, self.y + self.height]
+        bottom_right_corner = [self.x + self.width, self.y + self.height]
+
+        cornersList.append(top_left_corner)
+        cornersList.append(top_right_corner)
+        cornersList.append(bottom_left_corner)
+        cornersList.append(bottom_right_corner)
+
+        return cornersList
+
+    def it_within_my_area(self, player):
+        for corner in player.cornersList:
+            if self.point_within_my_area(corner):
+                return True
+        return False
+
+    def me_within_its_area(self, player):
+        pass
+
+
+
+    def detect_collision(self, player):
+        if self.it_within_my_area(player): #or self.inside_its_area(player):
+            return True
+        return False
+    
+
+    def point_within_my_area(self, point_coordinates):
+        #x1,y1###############x2,y2#
+        #                         #
+        #                         #
+        #x3,y3###############x4,y4#
+
+        x1 = self.cornersList[0][0]
+        y1 = self.cornersList[0][1]
+        x4 = self.cornersList[3][0]
+        y4 = self.cornersList[3][1]
+
+        p_x = point_coordinates[0]
+        p_y = point_coordinates[1]
+
+        if p_x >= x1 and p_x <= x4 and p_y >= y1 and p_y <= y4:
             return True
         return False
 
-    def render(self):
-        if (self.detect_collision()):
-            self.screen.blit(self.image_red, [self.x, self.y])
-        else: self.screen.blit(self.image, [self.x, self.y])
 
     
         

@@ -131,7 +131,7 @@ def main():
         
 
         # Game display
-        square.render()
+        square.render(the_player)
         the_player.draw_me()
 
         #shell display

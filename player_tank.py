@@ -11,7 +11,7 @@ class Player(Sprite):
         self.image_top = pygame.image.load(image_top)
         self.image_top = pygame.transform.scale(self.image_top,(72, 28))
         
-        self.bottom_angle = 0 
+        self.bottom_angle = 0
         self.top_angle = 0
         
         self.speed = 0
@@ -32,6 +32,8 @@ class Player(Sprite):
 
         self.shell_image = pygame.image.load("images/tank_shell1_cropped.png")
         self.shell_image = pygame.transform.scale(self.shell_image, (10, 50))
+
+        self.cornersList = self.find_corners()
         
         
         
@@ -89,6 +91,9 @@ class Player(Sprite):
         self.bottom_angle += self.turn_speed
 
         self.top_angle = self.find_mouse_angle()
+        self.cornersList = self.find_corners()
+        # print self.cornersList
+
 
    
     def draw_reload_bar(self):
@@ -164,6 +169,131 @@ class Player(Sprite):
         rads = self.find_mouse_angle_rad()
         return math.degrees(rads)
 
+    def find_corners(self):
+        cornersList = []
+        
+        #x1,y1###############x2,y2#
+        #                         #
+        #                         #
+        #x3,y3###############x4,y4#
+
+        #find coordinates when angle = 0
+        width = self.image_bottom.get_rect()[2]
+        height = self.image_bottom.get_rect()[3]
+        x1 = self.x - width/2
+        y1 = self.y - height/2
+        x2 = self.x + width/2
+        y2 = y1
+        x3 = x1
+        y3 = self.y + height/2
+        x4 = x2
+        y4 = y3
+
+        #0 degrees
+        # top_left_corner = [x1, y1]
+        # top_right_corner = [x2, y2]
+        # bottom_left_corner = [x3, y3]
+        # bottom_right_corner = [x4, y4]
+
+        #pretend points ( vectors and stuff )  - self.x / - self.y
+        x1_p = - width/2
+        y1_p = - height/2
+        x2_p = width/2
+        y2_p = y1_p
+        x3_p = x1_p
+        y3_p = height/2
+        x4_p = x2_p
+        y4_p = y3_p
+
+        # print x1_p, y1_p
+        # print x4_p, y4_p
+        # print self.image_bottom.get_rect()[2], self.image_bottom.get_rect()[3]
+
+        #rotate about [self.x, self.y]
+        x1_p_r = self.find_rotated_x([x1_p, y1_p])
+        y1_p_r = self.find_rotated_y([x1_p, y1_p])
+        x2_p_r = self.find_rotated_x([x2_p, y2_p])
+        y2_p_r = self.find_rotated_y([x2_p, y2_p])
+        x3_p_r = self.find_rotated_x([x3_p, y3_p])
+        y3_p_r = self.find_rotated_y([x3_p, y3_p])
+        x4_p_r = self.find_rotated_x([x4_p, y4_p])
+        y4_p_r = self.find_rotated_y([x4_p, y4_p])
+
+
+        # print x1_p_r, y1_p_r
+        # print x4_p_r, y4_p_r
+
+
+        #find rotated coordinates
+
+        x1_r = x1_p_r + self.x
+        y1_r = y1_p_r + self.y
+        x2_r = x2_p_r + self.x
+        y2_r = y2_p_r + self.y
+        x3_r = x3_p_r + self.x
+        y3_r = y3_p_r + self.y
+        x4_r = x4_p_r + self.x
+        y4_r = y4_p_r + self.y
+
+        # x1_r = self.find_rotated_x([x1, y1])
+        # y1_r = self.find_rotated_y([x1, y1])
+        # x2_r = self.find_rotated_x([x2, y2])
+        # y2_r = self.find_rotated_y([x2, y2])
+        # x3_r = self.find_rotated_x([x3, y3])
+        # y3_r = self.find_rotated_y([x3, y3])
+        # x4_r = self.find_rotated_x([x4, y4])
+        # y4_r = self.find_rotated_y([x4, y4])
+
+
+
+        print x1_r, y1_r
+        print x2_r, y2_r
+        print x3_r, y3_r
+        print x4_r, y4_r
+
+        top_left_corner = [x1_r, y1_r]
+        top_right_corner = [x2_r, y2_r]
+        bottom_left_corner = [x3_r, y3_r]
+        bottom_right_corner = [x4_r, y4_r]
+
+        cornersList.append(top_left_corner)
+        cornersList.append(top_right_corner)
+        cornersList.append(bottom_left_corner)
+        cornersList.append(bottom_right_corner)
+
+        return cornersList
+
+    def find_rotated_x(self, point_coordinates):
+        radians = self.bottom_angle * math.pi / 180
+        x = point_coordinates[0]
+        y = point_coordinates[1]
+        # print math.cos(radians), math.sin(radians)
+        return x * math.cos(radians) + y * math.sin(radians)  ### clockwise
+        # return x * math.cos(radians) - y * math.sin(radians)  ### counter clockwise
+        # return x * math.cos(radians) - y * math.sin(radians)  ### pygame
+
+    def find_rotated_y(self, point_coordinates):
+        radians = self.bottom_angle * math.pi / 180
+        x = point_coordinates[0]
+        y = point_coordinates[1]
+        return y * math.cos(radians) - x * math.sin(radians)  ### clockwise
+        # return y * math.cos(radians) + x * math.sin(radians)  ### counter clockwise
+        # return y * math.cos(radians) + x * math.sin(radians)  ### pygame
+
+    # def my_area(self):
+    #             #x1,y1###############x2,y2#
+    #     #                         #
+    #     #                         #
+    #     #x3,y3###############x4,y4#
+
+    #     x1 = self.cornersList[0][0]
+    #     y1 = self.cornersList[0][1]
+    #     x2 = self.cornersList[1][0]
+    #     y2 = self.cornersList[1][1]
+    #     x3 = self.cornersList[2][0]
+    #     y3 = self.cornersList[2][1]
+    #     x4 = self.cornersList[3][0]
+    #     y4 = self.cornersList[3][1] 
 
     
 
