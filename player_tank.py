@@ -74,7 +74,6 @@ class Player(Sprite):
         self.cornersList = self.find_corners(self.bottom_angle, self.x, self.y, self.width, self.height)
 
 
-
     def move_tank_bottom(self, list_of_objects):
         radians = self.bottom_angle * math.pi / 180
         add_x = math.cos(radians) * self.speed
@@ -249,8 +248,6 @@ class Player(Sprite):
                     return True
         return False
         
-
-
     def it_within_my_area(self, player, my_corners_list):
         for corner in player.cornersList:
             if self.point_within_my_area(corner, my_corners_list):

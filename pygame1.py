@@ -5,6 +5,7 @@ import time
 from pygame.sprite import Group, groupcollide # why do we need it????
 from Shell import Shell
 from collision import Block
+import key
 
 KEY_UP = 273
 KEY_DOWN = 274
@@ -58,36 +59,25 @@ def main():
     stop_game = False
     while not stop_game:
         for event in pygame.event.get():
-
+            key.move_forward_pressed()
             # Event handling
 
             if event.type == pygame.QUIT:
                 stop_game = True
-            if event.type == pygame.KEYDOWN:
-                #move back and forth
-                if event.key == KEY_UP or event.key == ord('w'):
-                    the_player.move_up()
-                if event.key == KEY_DOWN or event.key == ord('s'):
-                    the_player.move_down()
 
-                #change bottom_angle
-                if event.key == KEY_LEFT or event.key == ord('a'):
-                    the_player.turn_left()
-                if event.key == KEY_RIGHT or event.key == ord('d'):
-                    the_player.turn_right()
+            if key.move_forward_pressed():
+                the_player.move_up()
+            if key.move_back_pressed():
+                the_player.move_down()
+            if not key.move_back_pressed() and not key.move_forward_pressed():
+                the_player.stop() 
 
-            if event.type == pygame.KEYUP:
-                if event.key == KEY_UP or event.key == ord('w'):
-                    the_player.stop()
-                if event.key == KEY_DOWN or event.key == ord('s'):
-                    the_player.stop()
-                if event.key == KEY_RIGHT or event.key == ord('d'):
-                    the_player.stop_turn()
-                if event.key == KEY_LEFT or event.key == ord('a'):
-                    the_player.stop_turn()        
-
-            if event.type == pygame.MOUSEMOTION:
-                pass
+            if key.turn_left_pressed():
+                the_player.turn_left()
+            if key.turn_right_pressed():
+                the_player.turn_right()
+            if not key.turn_left_pressed() and not key.turn_right_pressed():
+                the_player.stop_turn()    
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # print math.fabs((pygame.mouse.get_pos()[0] - the_player.x) / math.cos(the_player.top_angle_rad))
