@@ -8,6 +8,9 @@ class Player(Sprite):
         self.image_bottom = pygame.image.load(image_bottom)
         self.image_bottom = pygame.transform.scale(self.image_bottom,(74,38))
 
+        self.width = self.image_bottom.get_rect()[2]  ### the image has some transparent space at the back
+        self.height = self.image_bottom.get_rect()[3]
+
         self.image_top = pygame.image.load(image_top)
         self.image_top = pygame.transform.scale(self.image_top,(72, 28))
         
@@ -33,7 +36,7 @@ class Player(Sprite):
         self.shell_image = pygame.image.load("images/tank_shell1_cropped.png")
         self.shell_image = pygame.transform.scale(self.shell_image, (10, 50))
 
-        self.cornersList = self.find_corners()
+        self.cornersList = self.find_corners(self.bottom_angle, self.x, self.y, self.width, self.height)
         
 
     def draw_me(self):
@@ -77,44 +80,20 @@ class Player(Sprite):
         add_x = math.cos(radians) * self.speed
         add_y = math.sin(radians) * self.speed
 
-        # print self.detect_collision(list_of_objects)
+        new_bottom_angle = self.bottom_angle + self.turn_speed 
+        new_x = self.x + add_x
+        new_y = self.y - add_y
+    
+        if not self.detect_collision(list_of_objects, self.find_corners(new_bottom_angle, self.x, self.y, self.width, self.height) ):
+            self.bottom_angle = new_bottom_angle
+        if not self.detect_collision(list_of_objects, self.find_corners(self.bottom_angle, new_x, new_y, self.width, self.height) ):
+            self.x = new_x
+            self.y = new_y
 
-        # if not self.detect_collision(list_of_objects):
-
-        #     self.x += add_x
-        #     self.y -= add_y
-
-        #     self.bottom_angle += self.turn_speed
-
-        self.x += add_x
-        self.y -= add_y
-
-        self.bottom_angle += self.turn_speed
-
-
-        # if self.detect_collision(list_of_objects):
-        #     self.speed = 0
-        #     self.turn_speed = 0
-
-        # if self.detect_collision(list_of_objects):
-        #     self.speed = - self.speed
-        #     self.turn_speed = - self.turn_speed
-        #     if not self.detect_collision(list_of_objects):
-        #         self.speed = - self.speed
-        #         self.turn_speed = - self.turn_speed
-
-        
-        # if self.detect_collision(list_of_objects):
-
-        #     self.x -= add_x * 1.1
-        #     self.y += add_y * 1.1
-
-        #     self.bottom_angle -= self.turn_speed * 1.1
-        
-        
 
         self.top_angle = self.find_mouse_angle()
-        self.cornersList = self.find_corners()
+        self.cornersList = self.find_corners(self.bottom_angle, self.x, self.y, self.width, self.height)
+
         
         
 
@@ -193,86 +172,63 @@ class Player(Sprite):
         rads = self.find_mouse_angle_rad()
         return math.degrees(rads)
 
-    def find_corners(self):
+    def find_corners(self, angle, center_x, center_y, width, height):
         cornersList = []
-        
+    
         #x1,y1###############x2,y2#
         #                         #
         #                         #
         #x3,y3###############x4,y4#
 
-        width = self.image_bottom.get_rect()[2]
-        height = self.image_bottom.get_rect()[3]
-        
+        corners_list = [[0,0] for x in range(4)]
+
         #pretend points when angle is 0 = points about [self.x, self.y] as center
         # ( vectors and stuff )  - self.x / - self.y
-        x1_p = - width/2 + 10  ## the image has some transparent space at its left
-        y1_p = - height/2
-        x2_p = width/2
-        y2_p = y1_p
-        x3_p = x1_p
-        y3_p = height/2
-        x4_p = x2_p
-        y4_p = y3_p
+        for i in range(len(corners_list)):  ## the image has some transparent space at its left
+            if i > 1:
+                y_p = height /2
+            else: 
+                y_p = - height / 2
+            if i % 2 == 0:
+                x_p = -width / 2 + 10
+            else: 
+                x_p = width / 2
+            corners_list[i][0] = self.find_rotated_x([x_p, y_p], angle, center_x)
+            corners_list[i][1] = self.find_rotated_y([x_p, y_p], angle, center_y)
 
-        #rotate about [self.x, self.y]
-        x1_p_r = self.find_rotated_x([x1_p, y1_p])
-        y1_p_r = self.find_rotated_y([x1_p, y1_p])
-        x2_p_r = self.find_rotated_x([x2_p, y2_p])
-        y2_p_r = self.find_rotated_y([x2_p, y2_p])
-        x3_p_r = self.find_rotated_x([x3_p, y3_p])
-        y3_p_r = self.find_rotated_y([x3_p, y3_p])
-        x4_p_r = self.find_rotated_x([x4_p, y4_p])
-        y4_p_r = self.find_rotated_y([x4_p, y4_p])
+        return corners_list
 
-        #find rotated coordinates
-        x1_r = x1_p_r + self.x
-        y1_r = y1_p_r + self.y
-        x2_r = x2_p_r + self.x
-        y2_r = y2_p_r + self.y
-        x3_r = x3_p_r + self.x
-        y3_r = y3_p_r + self.y
-        x4_r = x4_p_r + self.x
-        y4_r = y4_p_r + self.y
+    def find_rotated_x(self, pretend_point_coordinates, angle, center_x):
+        radians = angle * math.pi / 180
+        x = pretend_point_coordinates[0]
+        y = pretend_point_coordinates[1]
+        return x * math.cos(radians) + y * math.sin(radians) + center_x 
 
-        top_left_corner = [x1_r, y1_r]
-        top_right_corner = [x2_r, y2_r]
-        bottom_left_corner = [x3_r, y3_r]
-        bottom_right_corner = [x4_r, y4_r]
+    def find_rotated_y(self, pretend_point_coordinates, angle, center_y):
+        radians = angle * math.pi / 180
+        x = pretend_point_coordinates[0]
+        y = pretend_point_coordinates[1]
+        return y * math.cos(radians) - x * math.sin(radians) + center_y 
 
-        cornersList.append(top_left_corner)
-        cornersList.append(top_right_corner)
-        cornersList.append(bottom_left_corner)
-        cornersList.append(bottom_right_corner)
-
-        return cornersList
-
-    def find_rotated_x(self, point_coordinates):
-        radians = self.bottom_angle * math.pi / 180
-        x = point_coordinates[0]
-        y = point_coordinates[1]
-        return x * math.cos(radians) + y * math.sin(radians) 
-
-    def find_rotated_y(self, point_coordinates):
-        radians = self.bottom_angle * math.pi / 180
-        x = point_coordinates[0]
-        y = point_coordinates[1]
-        return y * math.cos(radians) - x * math.sin(radians) 
-
-    def point_within_my_area(self, point_coordinates):
+    def point_within_my_area(self, point_coordinates, my_corners_list):
         #x1,y1###############x2,y2#
         #                         #
         #                         #
         #x3,y3###############x4,y4#
 
-        x1 = self.cornersList[0][0]
-        y1 = self.cornersList[0][1]
-        x2 = self.cornersList[1][0]
-        y2 = self.cornersList[1][1]
-        x3 = self.cornersList[2][0]
-        y3 = self.cornersList[2][1]
-        x4 = self.cornersList[3][0]
-        y4 = self.cornersList[3][1]
+
+        # for corner in my_corners_list:
+        #     x = corner[0]
+        #     y = corner[1]
+
+        x1 = my_corners_list[0][0]
+        y1 = my_corners_list[0][1]
+        x2 = my_corners_list[1][0]
+        y2 = my_corners_list[1][1]
+        x3 = my_corners_list[2][0]
+        y3 = my_corners_list[2][1]
+        x4 = my_corners_list[3][0]
+        y4 = my_corners_list[3][1]
 
         p_x = point_coordinates[0]
         p_y = point_coordinates[1]
@@ -296,134 +252,60 @@ class Player(Sprite):
 
         return a1 * p_x + b1 * p_y + c1 >= 0 and a2 * p_x + b2 * p_y + c2 >= 0 and a3 * p_x + b3 * p_y + c3 >= 0 and a4 * p_x + b4 * p_y + c4 >= 0
 
-    def detect_collision(self, list_of_objects):
-        
+    def point_within(self, point_coordinates, corners_list):
+        x = point_coordinates[0]
+        y = point_coordinates[1]
+
+        for i in range(len(corners_list)):
+            x1 = corners_list[i][0]
+            y1 = corners_list[i][1]
+
+            next_i = (i + 1) % (len(corners_list) - 1)
+            x2 = corners_list[next_i][0]
+            y2 = corners_list[next_i][1]
+
+            a = y1 - y2
+            b = x2 - x1
+            c = x1 * y2 - x2 * y1
+
+            if a * x + b * y + c < 0:
+                return False
+        return True
+
+
+
+
+
+
+    def straight(self, x, y):
+        return 
+            
+
+
+
+
+
+    def detect_collision(self, list_of_objects, my_corners_list):
         for obj in list_of_objects:
             if obj != self:
-                if self.it_within_my_area(obj) or self.me_within_its_area(obj):
-                    # print obj
-                    # print self.it_within_my_area(obj)
-                    # print self.me_within_its_area(obj)
+                if self.it_within_my_area(obj, my_corners_list) or self.me_within_its_area(obj, my_corners_list ):
                     return True
         return False
         
 
 
-    def it_within_my_area(self, player):
+    def it_within_my_area(self, player, my_corners_list):
         for corner in player.cornersList:
-            if self.point_within_my_area(corner):
+            if self.point_within_my_area(corner, my_corners_list):
                 return True
         return False
 
-    def me_within_its_area(self, player):
-        for corner in self.cornersList:
-            if player.point_within_my_area(corner):
-                return True
+    def me_within_its_area(self, player, cornersList):
+        if player != self:
+            for corner in cornersList:
+                if player.point_within_my_area(corner):
+                    return True
         return False
-
-
-#     def find_corners_fake(self, fake_angle):
-#         cornersList = []
-        
-#         #x1,y1###############x2,y2#
-#         #                         #
-#         #                         #
-#         #x3,y3###############x4,y4#
-
-#         width = self.image_bottom.get_rect()[2]
-#         height = self.image_bottom.get_rect()[3]
-        
-#         #pretend points when angle is 0 = points about [self.x, self.y] as center
-#         # ( vectors and stuff )  - self.x / - self.y
-#         x1_p = - width/2 + 10  ## the image has some transparent space at its left
-#         y1_p = - height/2
-#         x2_p = width/2
-#         y2_p = y1_p
-#         x3_p = x1_p
-#         y3_p = height/2
-#         x4_p = x2_p
-#         y4_p = y3_p
-
-#         #rotate about [self.x, self.y]
-#         x1_p_r = self.find_rotated_x([x1_p, y1_p])
-#         y1_p_r = self.find_rotated_y([x1_p, y1_p])
-#         x2_p_r = self.find_rotated_x([x2_p, y2_p])
-#         y2_p_r = self.find_rotated_y([x2_p, y2_p])
-#         x3_p_r = self.find_rotated_x([x3_p, y3_p])
-#         y3_p_r = self.find_rotated_y([x3_p, y3_p])
-#         x4_p_r = self.find_rotated_x([x4_p, y4_p])
-#         y4_p_r = self.find_rotated_y([x4_p, y4_p])
-
-#         #find rotated coordinates
-#         x1_r = x1_p_r + self.x
-#         y1_r = y1_p_r + self.y
-#         x2_r = x2_p_r + self.x
-#         y2_r = y2_p_r + self.y
-#         x3_r = x3_p_r + self.x
-#         y3_r = y3_p_r + self.y
-#         x4_r = x4_p_r + self.x
-#         y4_r = y4_p_r + self.y
-
-#         top_left_corner = [x1_r, y1_r]
-#         top_right_corner = [x2_r, y2_r]
-#         bottom_left_corner = [x3_r, y3_r]
-#         bottom_right_corner = [x4_r, y4_r]
-
-#         cornersList.append(top_left_corner)
-#         cornersList.append(top_right_corner)
-#         cornersList.append(bottom_left_corner)
-#         cornersList.append(bottom_right_corner)
-
-#         return cornersList
-
-#   def point_within_my_fake_area(self, point_coordinates):
-#         #x1,y1###############x2,y2#
-#         #                         #
-#         #                         #
-#         #x3,y3###############x4,y4#
-
-#         x1 = self.cornersList[0][0]
-#         y1 = self.cornersList[0][1]
-#         x2 = self.cornersList[1][0]
-#         y2 = self.cornersList[1][1]
-#         x3 = self.cornersList[2][0]
-#         y3 = self.cornersList[2][1]
-#         x4 = self.cornersList[3][0]
-#         y4 = self.cornersList[3][1]
-
-#         p_x = point_coordinates[0]
-#         p_y = point_coordinates[1]
-
-#         ## straight (line) formula =>  ax + bx + c = 0  
-#         ##  or   (y1 -y2)x - (x2 - x1)y + (x1y2 - x2y1) = 0
-#         a1 = y1 - y2
-#         a2 = y2 - y4
-#         a3 = y4 - y3
-#         a4 = y3 - y1
-
-#         b1 = x2 - x1
-#         b2 = x4 - x2
-#         b3 = x3 - x4
-#         b4 = x1 - x3
-
-#         c1 = x1 * y2 - x2 * y1
-#         c2 = x2 * y4 - y2 * x4
-#         c3 = x4 * y3 - x3 * y4
-#         c4 = x3 * y1 - x1 * y3
-
-#         return a1 * p_x + b1 * p_y + c1 >= 0 and a2 * p_x + b2 * p_y + c2 >= 0 and a3 * p_x + b3 * p_y + c3 >= 0 and a4 * p_x + b4 * p_y + c4 >= 0
-
-# 	def find_rotated_x_fake(self, point_coordinates, angle):
-#         radians = self.bottom_angle * math.pi / 180
-#         x = point_coordinates[0]
-#         y = point_coordinates[1]
-#         return x * math.cos(radians) + y * math.sin(radians) 
-
-#     def find_rotated_y_fake(self, point_coordinates, angle):
-#         radians = self.bottom_angle * math.pi / 180
-#         x = point_coordinates[0]
-#         y = point_coordinates[1]
-#         return y * math.cos(radians) - x * math.sin(radians) 
 
 
 	
