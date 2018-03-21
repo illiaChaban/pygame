@@ -46,7 +46,6 @@ def main():
     players.add(square)
     
     shells = Group()
-    
 
     #what does this do???? 
     # player_group = Group()
@@ -64,7 +63,7 @@ def main():
 
             if event.type == pygame.QUIT:
                 stop_game = True
-            elif event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN:
                 #move back and forth
                 if event.key == KEY_UP or event.key == ord('w'):
                     the_player.move_up()
@@ -77,7 +76,7 @@ def main():
                 if event.key == KEY_RIGHT or event.key == ord('d'):
                     the_player.turn_right()
 
-            elif event.type == pygame.KEYUP:
+            if event.type == pygame.KEYUP:
                 if event.key == KEY_UP or event.key == ord('w'):
                     the_player.stop()
                 if event.key == KEY_DOWN or event.key == ord('s'):
@@ -87,10 +86,10 @@ def main():
                 if event.key == KEY_LEFT or event.key == ord('a'):
                     the_player.stop_turn()        
 
-            elif event.type == pygame.MOUSEMOTION:
+            if event.type == pygame.MOUSEMOTION:
                 pass
 
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 # print math.fabs((pygame.mouse.get_pos()[0] - the_player.x) / math.cos(the_player.top_angle_rad))
                 x2 = pygame.mouse.get_pos()[0]
                 y2 = pygame.mouse.get_pos()[1]

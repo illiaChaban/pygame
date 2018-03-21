@@ -46,8 +46,9 @@ class Block(Sprite):
 
         cornersList.append(top_left_corner)
         cornersList.append(top_right_corner)
-        cornersList.append(bottom_left_corner)
         cornersList.append(bottom_right_corner)
+        cornersList.append(bottom_left_corner)
+        
 
         return cornersList
 
@@ -74,17 +75,17 @@ class Block(Sprite):
         #x1,y1###############x2,y2#
         #                         #
         #                         #
-        #x3,y3###############x4,y4#
+        #x4,y4###############x3,y3#
 
         x1 = self.cornersList[0][0]
         y1 = self.cornersList[0][1]
-        x4 = self.cornersList[3][0]
-        y4 = self.cornersList[3][1]
+        x3 = self.cornersList[2][0]
+        y3 = self.cornersList[2][1]
 
         p_x = point_coordinates[0]
         p_y = point_coordinates[1]
 
-        return p_x >= x1 and p_x <= x4 and p_y >= y1 and p_y <= y4
+        return p_x >= x1 and p_x <= x3 and p_y >= y1 and p_y <= y3
 
 
 
