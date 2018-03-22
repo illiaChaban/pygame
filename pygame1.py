@@ -128,8 +128,8 @@ def main():
         for shell in shells:
             shell.update(the_player, players)
             shell.draw_shot()
-            if shell.beyond_screen():
-                shells.remove(shell)
+            # if shell.beyond_screen():
+            #     shells.remove(shell)
                 #or if shell reached mouse_pos
                 
         pygame.display.update()

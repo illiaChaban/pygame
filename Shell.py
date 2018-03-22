@@ -54,14 +54,14 @@ class Shell(Sprite):
         # self.rect = pygame.Rect(self.x, self.y, 20, 20)
         self.shot_length = math.sqrt((x2 - self.start_x)**2 +(y2 - self.start_y)**2)
         self.shot_length_current = math.sqrt((self.x - self.start_x)**2 + (self.y - self.start_y)**2)
-        
+        # print self.collide(obj_list, [self.x, self.y])
         if self.collide(obj_list, [self.x, self.y]):
             self.shot_length_current = self.shot_length
-            x_coolided = self.collide(obj_list, [self.x, self.y])[0]
-            y_coolided = self.collide(obj_list, [self.x, self.y])[1]
+            x_collided = self.collide(obj_list, [self.x, self.y])[0]
+            y_collided = self.collide(obj_list, [self.x, self.y])[1]
 
-            self.x = x_coolided
-            self.y = y_coolided
+            self.x = x_collided
+            self.y = y_collided
 
         else:    
             if (self.shot_length - self.shot_length_current) < self.speed:
@@ -188,19 +188,23 @@ class Shell(Sprite):
         pass
     
     def collide(self, obj_list, my_coordinates):
-        for obj in obj_list:
-            if obj != self:
-                return self.check_segment_for_collision(obj, my_coordinates)
+ 
+                # if self.check_segment_for_collision(obj, my_coordinates):
+        return self.check_segment_for_collision(obj_list, my_coordinates)
+        # return False
     
     ## preventing skipping corners
-    def check_segment_for_collision(self, obj, my_coordinates):
-        if obj.point_within_my_area(my_coordinates, obj.cornersList):
-            return my_coordinates
-        r = 7
-        for x in range(r - 1):
-            my_coordinates[0] += self.add_x / r
-            my_coordinates[1] -= self.dec_y / r
+    def check_segment_for_collision(self, obj_list, my_coordinates):
+        for obj in obj_list:
             if obj.point_within_my_area(my_coordinates, obj.cornersList):
                 return my_coordinates
+            r = 7
+            for x in range(r - 1):
+                my_coordinates[0] += self.add_x / r
+                my_coordinates[1] -= self.dec_y / r
+                if obj.point_within_my_area(my_coordinates, obj.cornersList):
+                    return my_coordinates
         return False
 
+
+## the game works fine after saving, shooting starts lugging second time you run it
