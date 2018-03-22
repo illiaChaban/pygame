@@ -63,13 +63,17 @@ class Shell(Sprite):
             self.x = x_collided
             self.y = y_collided
 
+            # print self.shot_length, self.shot_length_current
+
         else:    
             if (self.shot_length - self.shot_length_current) < self.speed:
+            
                 self.x = x2
                 self.y = y2
             
             #i can put it beyond the screen instead
             elif self.shot_length > self.shot_length_current:
+                print self.shot_length - self.shot_length_current
             
                 self.x += self.add_x
                 self.y -= self.dec_y
@@ -188,14 +192,8 @@ class Shell(Sprite):
         pass
     
     def collide(self, obj_list, my_coordinates):
- 
-                # if self.check_segment_for_collision(obj, my_coordinates):
-        return self.check_segment_for_collision(obj_list, my_coordinates)
-        # return False
-    
-    ## preventing skipping corners
-    def check_segment_for_collision(self, obj_list, my_coordinates):
         for obj in obj_list:
+            # if obj != self:
             if obj.point_within_my_area(my_coordinates, obj.cornersList):
                 return my_coordinates
             r = 7
@@ -205,6 +203,18 @@ class Shell(Sprite):
                 if obj.point_within_my_area(my_coordinates, obj.cornersList):
                     return my_coordinates
         return False
+    
+    ## preventing skipping corners
+    # def check_segment_for_collision(self, obj, my_coordinates):
+    #     if obj.point_within_my_area(my_coordinates, obj.cornersList):
+    #         return my_coordinates
+    #     r = 7
+    #     for x in range(r - 1):
+    #         my_coordinates[0] += self.add_x / r
+    #         my_coordinates[1] -= self.dec_y / r
+    #         if obj.point_within_my_area(my_coordinates, obj.cornersList):
+    #             return my_coordinates
+    #     return False
 
 
 ## the game works fine after saving, shooting starts lugging second time you run it

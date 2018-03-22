@@ -94,8 +94,11 @@ def main():
                     # print shot_length
                     if shot_length > 85:
                         new_shell = Shell("images/tank_shell5.png", screen, the_player)   #tank_shell1_cropped.png
-                        shells.add(new_shell)
+                        # shells.add(new_shell)
                         the_player.last_shot_tick = new_shell.shot_start_tick
+                        if new_shell.shot_length == new_shell.shot_length_current:
+                            del new_shell
+                    
                         
 
                 # elif current_tick - the_player.last_shot_tick < 175:
