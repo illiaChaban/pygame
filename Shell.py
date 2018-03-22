@@ -35,6 +35,8 @@ class Shell(Sprite):
         self.shot_start_tick = pygame.time.get_ticks()
         self.shot_end_tick = 0
         
+        self.add_x = self.speed * math.cos(self.angle_rad)
+        self.dec_y = self.speed * math.sin(self.angle_rad)
         
     def draw_shot(self):
         self.draw_fire()
@@ -64,8 +66,8 @@ class Shell(Sprite):
             #i can put it beyond the screen instead
             elif self.shot_length > self.shot_length_current:
             
-                self.x += self.speed * math.cos(self.angle_rad)
-                self.y -= self.speed * math.sin(self.angle_rad)
+                self.x += self.add_x
+                self.y -= self.dec_y
             # self.y -= math.sqrt((self.speed ** 2) - (self.speed * math.cos(angle_radians))**2)
 
             # print self.x, start_x
@@ -183,32 +185,17 @@ class Shell(Sprite):
     def collide(self, obj_list, my_coordinates):
         for obj in obj_list:
             if obj != self:
-                if obj.point_within_my_area(my_coordinates, obj.cornersList):
-                    return True
+                return self.check_segment_for_collision(obj, my_coordinates)
+    
+    ## preventing skipping corners
+    def check_segment_for_collision(self, obj, my_coordinates):
+        if obj.point_within_my_area(my_coordinates, obj.cornersList):
+            return True
+        r = 7
+        for x in range(r - 1):
+            my_coordinates[0] -= self.add_x / r
+            my_coordinates[1] += self.dec_y / r
+            if obj.point_within_my_area(my_coordinates, obj.cornersList):
+                return True
         return False
-
-    # def detect_collision(self, list_of_objects, my_corners_list):
-    #     for obj in list_of_objects:
-    #         if obj != self:
-    #             if self.it_within_my_area(obj, my_corners_list) or self.me_within_its_area(obj, my_corners_list ):
-    #                 return True
-    #     return False
-        
-    # def it_within_my_area(self, player, my_corners_list):
-    #     for corner in player.cornersList:
-    #         if self.point_within_my_area(corner, my_corners_list):
-    #             return True
-    #     return False
-
-    # def me_within_its_area(self, player, cornersList):
-    #     if player != self:
-    #         for corner in cornersList:
-    #             if player.point_within_my_area(corner):
-    #                 return True
-    #     return False
-
-            
-
-        ##### catching corners, bullet goes beyond
-        
 
