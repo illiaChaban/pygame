@@ -44,7 +44,7 @@ class Shell(Sprite):
             self.draw_bullet()
 
 
-    def update(self, player):
+    def update(self, player, obj_list):
 
         x2 = self.mouse_pos[0]
         y2 = self.mouse_pos[1]
@@ -53,17 +53,21 @@ class Shell(Sprite):
         self.shot_length = math.sqrt((x2 - self.start_x)**2 +(y2 - self.start_y)**2)
         self.shot_length_current = math.sqrt((self.x - self.start_x)**2 + (self.y - self.start_y)**2)
         
-        if (self.shot_length - self.shot_length_current) < self.speed:
-            self.x = x2
-            self.y = y2
+        if self.collide(obj_list, [self.x, self.y]):
+            self.shot_length_current = self.shot_length
+
+        else:    
+            if (self.shot_length - self.shot_length_current) < self.speed:
+                self.x = x2
+                self.y = y2
             
             #i can put it beyond the screen instead
-        elif self.shot_length > self.shot_length_current:
+            elif self.shot_length > self.shot_length_current:
             
-            self.x += self.speed * math.cos(self.angle_rad)
-            self.y -= self.speed * math.sin(self.angle_rad)
+                self.x += self.speed * math.cos(self.angle_rad)
+                self.y -= self.speed * math.sin(self.angle_rad)
             # self.y -= math.sqrt((self.speed ** 2) - (self.speed * math.cos(angle_radians))**2)
-            
+
             # print self.x, start_x
 
             ## change self.x, y like top_image
@@ -163,13 +167,48 @@ class Shell(Sprite):
 
 
     def beyond_screen(self):
-        #hardcoding width and height of the screen
-        if self.y < 0 or self.y > 850 or self.x < 0 or self.x > 1200:
+        width = self.screen.get_rect()[2]
+        height = self.screen.get_rect()[3]
+        if self.y < 0 or self.y > height or self.x < 0 or self.x > width:
             return True
         return False
 
     
+    def find_end_coordinates_x(self):
+        pass
 
+    def find_end_coordinates_y(self):
+        pass
+    
+    def collide(self, obj_list, my_coordinates):
+        for obj in obj_list:
+            if obj != self:
+                if obj.point_within_my_area(my_coordinates, obj.cornersList):
+                    return True
+        return False
 
-        ##### don't shoot if 
+    # def detect_collision(self, list_of_objects, my_corners_list):
+    #     for obj in list_of_objects:
+    #         if obj != self:
+    #             if self.it_within_my_area(obj, my_corners_list) or self.me_within_its_area(obj, my_corners_list ):
+    #                 return True
+    #     return False
         
+    # def it_within_my_area(self, player, my_corners_list):
+    #     for corner in player.cornersList:
+    #         if self.point_within_my_area(corner, my_corners_list):
+    #             return True
+    #     return False
+
+    # def me_within_its_area(self, player, cornersList):
+    #     if player != self:
+    #         for corner in cornersList:
+    #             if player.point_within_my_area(corner):
+    #                 return True
+    #     return False
+
+            
+
+        ##### catching corners, bullet goes beyond
+        
+

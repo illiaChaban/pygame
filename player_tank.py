@@ -257,7 +257,7 @@ class Player(Sprite):
     def me_within_its_area(self, player, cornersList):
         if player != self:
             for corner in cornersList:
-                if player.point_within_my_area(corner):
+                if player.point_within_my_area(corner, player.cornersList):
                     return True
         return False
 

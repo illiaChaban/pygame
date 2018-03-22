@@ -54,7 +54,7 @@ class Block(Sprite):
 
     def it_within_my_area(self, player):
         for corner in player.cornersList:
-            if self.point_within_my_area(corner):
+            if self.point_within_my_area(corner, self.cornersList):
                 return True
         return False
 
@@ -71,11 +71,13 @@ class Block(Sprite):
 
     
 
-    def point_within_my_area(self, point_coordinates):
+    def point_within_my_area(self, point_coordinates, my_corners_list):
         #x1,y1###############x2,y2#
         #                         #
         #                         #
         #x4,y4###############x3,y3#
+        if not my_corners_list:
+            my_corners_list = self.cornersList
 
         x1 = self.cornersList[0][0]
         y1 = self.cornersList[0][1]

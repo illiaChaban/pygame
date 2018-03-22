@@ -126,7 +126,7 @@ def main():
 
         #shell display
         for shell in shells:
-            shell.update(the_player)
+            shell.update(the_player, players)
             shell.draw_shot()
             if shell.beyond_screen():
                 shells.remove(shell)
