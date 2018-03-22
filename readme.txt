@@ -1,3 +1,5 @@
+After dealing with pygame, I consider myself overqualified for Google Maps. 
+
 Challenges:
 
     DANGER: A LOT OF MATHS INVOLVING COS, SIN ANG TRIGONOMETRY FORMULAS
@@ -10,16 +12,21 @@ Challenges:
 
 
     - rotaing: 
-        - old library ==> rotates not about center, but about top left corner,
-        while changing sizes of rectangle the image is in
+        - rotating in pygame is happening not about center, but relative to top 
+        left corner of the rectangle the image is in. While the image is rotating,
+        its rectangle is changing its size. To make it look like the image rotates about
+        its center you have to change the coordinates of the top left corner of the
+        image. 
+        It's hard to read, it was even harder to code.
+        It was probably the most challenging part of the project.
 
-        - finding center to put the tank top in
+        - finding center of bottom image to put the tank top in
 
-        - tring to change the ralative center of tank top -- the point top is 
+        - tring to change the relative center of tank top -- the point the top is 
         rotating about
     
-        - finding exact spots where images should appear (like fire out of the turret
-        when you shoot)
+        - finding exact spots where some of theimages should appear (like fire out 
+        of the turret when the tank shoots)
 
         - shooting shells involved rotating too. Despite already having code that 
         handled this kind of stuff quite good, the amount of small bugs accumulated 
@@ -46,4 +53,3 @@ Of course, I wouldn't be able to do this by myself, especially at the start, whe
 huge pile of problems seemed to be impossible to solve. For guidence and assistence,
 I'd like to thank all of my mentors and especially Jonathan Martin @nybblr.
 
-After all the challenges in pygame, I believe I'm overqualified for Google Maps. 
