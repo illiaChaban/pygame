@@ -45,3 +45,5 @@ challenges and were able to persevere.
 Of course, I wouldn't be able to do this by myself, especially at the start, when this
 huge pile of problems seemed to be impossible to solve. For guidence and assistence,
 I'd like to thank all of my mentors and especially Jonathan Martin @nybblr.
+
+After all the challenges in pygame, I believe I'm overqualified for Google Maps. 
