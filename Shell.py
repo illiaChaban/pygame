@@ -57,6 +57,11 @@ class Shell(Sprite):
         
         if self.collide(obj_list, [self.x, self.y]):
             self.shot_length_current = self.shot_length
+            x_coolided = self.collide(obj_list, [self.x, self.y])[0]
+            y_coolided = self.collide(obj_list, [self.x, self.y])[1]
+
+            self.x = x_coolided
+            self.y = y_coolided
 
         else:    
             if (self.shot_length - self.shot_length_current) < self.speed:
@@ -190,12 +195,12 @@ class Shell(Sprite):
     ## preventing skipping corners
     def check_segment_for_collision(self, obj, my_coordinates):
         if obj.point_within_my_area(my_coordinates, obj.cornersList):
-            return True
+            return my_coordinates
         r = 7
         for x in range(r - 1):
-            my_coordinates[0] -= self.add_x / r
-            my_coordinates[1] += self.dec_y / r
+            my_coordinates[0] += self.add_x / r
+            my_coordinates[1] -= self.dec_y / r
             if obj.point_within_my_area(my_coordinates, obj.cornersList):
-                return True
+                return my_coordinates
         return False
 
