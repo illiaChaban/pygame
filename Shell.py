@@ -18,7 +18,7 @@ class Shell(Sprite):
         self.angle = player.top_angle
         self.angle_rad = self.angle * math.pi / 180
 
-        self.shot_length = 0
+        self.shot_length = 1
         self.shot_length_current = 0
 
         self.start_x = player.x + math.cos(self.angle_rad)* 50 #_top
@@ -47,14 +47,13 @@ class Shell(Sprite):
 
 
     def update(self, player, obj_list):
-
+        # print 'i exist'
         x2 = self.mouse_pos[0]
         y2 = self.mouse_pos[1]
-        
-        # self.rect = pygame.Rect(self.x, self.y, 20, 20)
+
         self.shot_length = math.sqrt((x2 - self.start_x)**2 +(y2 - self.start_y)**2)
         self.shot_length_current = math.sqrt((self.x - self.start_x)**2 + (self.y - self.start_y)**2)
-        # print self.collide(obj_list, [self.x, self.y])
+
         if self.collide(obj_list, [self.x, self.y]):
             self.shot_length_current = self.shot_length
             x_collided = self.collide(obj_list, [self.x, self.y])[0]
@@ -62,32 +61,16 @@ class Shell(Sprite):
 
             self.x = x_collided
             self.y = y_collided
-
-            # print self.shot_length, self.shot_length_current
-
+            # self.delete()
         else:    
             if (self.shot_length - self.shot_length_current) < self.speed:
-            
                 self.x = x2
                 self.y = y2
-            
-            #i can put it beyond the screen instead
+
             elif self.shot_length > self.shot_length_current:
-                print self.shot_length - self.shot_length_current
             
                 self.x += self.add_x
                 self.y -= self.dec_y
-            # self.y -= math.sqrt((self.speed ** 2) - (self.speed * math.cos(angle_radians))**2)
-
-            # print self.x, start_x
-
-            ## change self.x, y like top_image
-        # else:
-        #     self.x = x2
-        #     self.y = y2
-        #     print "stopped shooting"
-        #     ##add explosion
-        #     return
         
         #update last tick
         if self.shot_length - self.shot_length_current > 0:
@@ -177,45 +160,24 @@ class Shell(Sprite):
         self.screen.blit(copied_bullet, [self.x - change_coo_x , self.y - change_coo_y ])
 
 
-    def beyond_screen(self):
-        width = self.screen.get_rect()[2]
-        height = self.screen.get_rect()[3]
-        if self.y < 0 or self.y > height or self.x < 0 or self.x > width:
-            return True
-        return False
-
-    
-    def find_end_coordinates_x(self):
-        pass
-
-    def find_end_coordinates_y(self):
-        pass
-    
-    def collide(self, obj_list, my_coordinates):
-        for obj in obj_list:
-            # if obj != self:
-            if obj.point_within_my_area(my_coordinates, obj.cornersList):
-                return my_coordinates
-            r = 7
-            for x in range(r - 1):
-                my_coordinates[0] += self.add_x / r
-                my_coordinates[1] -= self.dec_y / r
-                if obj.point_within_my_area(my_coordinates, obj.cornersList):
-                    return my_coordinates
-        return False
-    
-    ## preventing skipping corners
-    # def check_segment_for_collision(self, obj, my_coordinates):
-    #     if obj.point_within_my_area(my_coordinates, obj.cornersList):
-    #         return my_coordinates
-    #     r = 7
-    #     for x in range(r - 1):
-    #         my_coordinates[0] += self.add_x / r
-    #         my_coordinates[1] -= self.dec_y / r
-    #         if obj.point_within_my_area(my_coordinates, obj.cornersList):
-    #             return my_coordinates
+    # def beyond_screen(self):
+    #     width = self.screen.get_rect()[2]
+    #     height = self.screen.get_rect()[3]
+    #     if self.y < 0 or self.y > height or self.x < 0 or self.x > width:
+    #         return True
     #     return False
 
+    def collide(self, obj_list, my_coordinates):
+        r = 10
+        for obj in obj_list:
+            for x in range(r):
+                new_coos = my_coordinates[:]
+                new_coos[0] += self.add_x / r * x
+                new_coos[1] -= self.dec_y / r * x
+                if obj.point_within_my_area(new_coos, obj.cornersList):
+                    return new_coos
+        return False
 
-## the game works fine after saving, shooting starts lugging second time you run it
-#
+    def delete(self):
+        print 'DELETEDDDDDDD'
+        del self

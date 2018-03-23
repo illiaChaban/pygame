@@ -14,6 +14,12 @@ KEY_RIGHT = 275
 
 black = (0, 0, 0)
 
+def find_shot_length(player):
+    x2 = pygame.mouse.get_pos()[0]
+    y2 = pygame.mouse.get_pos()[1]
+    return math.sqrt((x2 - player.x)**2 +(y2 - player.y)**2)
+
+
 
 # def gameStart():
 # 	myFont = pygame.font.SysFont("monaco", 72)
@@ -80,24 +86,21 @@ def main():
                 the_player.stop_turn()    
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                # print math.fabs((pygame.mouse.get_pos()[0] - the_player.x) / math.cos(the_player.top_angle_rad))
-                x2 = pygame.mouse.get_pos()[0]
-                y2 = pygame.mouse.get_pos()[1]
                 
                 current_tick = pygame.time.get_ticks()
-                
-
                 if (current_tick - the_player.last_shot_tick) > the_player.cool_down:
 
-                
-                    shot_length = math.sqrt((x2 - the_player.x)**2 +(y2 - the_player.y)**2)
-                    # print shot_length
+                    shot_length = find_shot_length(the_player)
                     if shot_length > 85:
-                        new_shell = Shell("images/tank_shell5.png", screen, the_player)   #tank_shell1_cropped.png
-                        # shells.add(new_shell)
+                        new_shell = Shell("images/tank_shell5.png", screen, the_player) 
+                        shells.add(new_shell)
                         the_player.last_shot_tick = new_shell.shot_start_tick
-                        if new_shell.shot_length == new_shell.shot_length_current:
-                            del new_shell
+                        # if new_shell.shot_length == new_shell.shot_length_current:
+                        #     print new_shell.shot_length == new_shell.shot_length_current
+                        #     print new_shell.shot_length
+                        #     del new_shell
+                            
+                        #     print 'DELETED'
                     
                         
 
